@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* ——— Brand ——— */
+  --color-forest-950: #0A1713;
+  --color-forest-900: #0E1F1A;
+  --color-forest-800: #16362C;
+  --color-forest-700: #1F4A3C;
+  --color-forest-600: #2C6350;
+  --color-forest-100: #E7EEE9;
+  --color-forest-50: #F2F6F3;
+
+  --color-lime-500: #D3F36B;
+  --color-lime-600: #BFE04F;
+  --color-lime-700: #A8C948;
+  --color-lime-100: #F1FBD4;
+
+  --color-gold-500: #E8B44A;
+  --color-gold-100: #FBF1DC;
+
+  --color-clay-500: #C4643C;
+  --color-clay-100: #FBEDE7;
+
+  --color-sky-500: #3E7C9B;
+  --color-sky-100: #E4EFF4;
+
+  /* ——— Neutrals ——— */
+  --color-paper: #FBFAF6;
+  --color-surface: #FFFFFF;
+  --color-ink-900: #13201C;
+  --color-ink-600: #4A5952;
+  --color-ink-400: #6B7C74;
+  --color-line: #DDE4DE;
+  --color-line-soft: #EDF1EE;
+
+  /* ——— Type ——— */
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* ——— Radius ——— */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* ——— Shadow (soft, warm, never black) ——— */
+  --shadow-xs: 0 1px 2px rgba(19, 32, 28, 0.05);
+  --shadow-sm: 0 2px 8px rgba(19, 32, 28, 0.06);
+  --shadow-md: 0 6px 20px rgba(19, 32, 28, 0.08);
+  --shadow-lg: 0 16px 44px rgba(19, 32, 28, 0.12);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  svg.lucide {
+    stroke-width: 1.5;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-lime-600);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
