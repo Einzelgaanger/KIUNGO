@@ -49,3 +49,5 @@ Logged as the build proceeds. The specification is the source of truth; this fil
 - Unseeded databases are handled with `withDb()` so Prisma connection/schema errors render empty or fallback UI instead of crashing.
 - Review-queue age dots use `DEMO_NOW_ISO` (9 Sep 2026), not the machine clock.
 - Swahili remains a production requirement; the MVP is English-only as specified.
+- Four-state handling on server pages uses App Router `loading.tsx` (skeleton) and `error.tsx` (retry), plus designed empty states when a query returns no rows.
+- Edge-check pass/fail uses `<CheckChip>`, not `<StatusBadge>`, because those are check results rather than claim or verification statuses.

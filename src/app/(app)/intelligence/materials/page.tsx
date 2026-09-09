@@ -14,17 +14,13 @@ export default async function MaterialsPage() {
     () => prisma.materialPrice.findMany({ orderBy: { weekOf: "asc" } }),
     [],
   );
-  const selected = ["CEM-32.5", "STL-D12", "DR-STL-900", "WIN-AL-1212"];
-  const series = selected.map((code) => {
-    const item = ITEM_CATALOGUE.find((i) => i.code === code);
-    return {
-      code,
-      name: item?.itemName ?? code,
-      points: prices
-        .filter((p) => p.itemCode === code && p.countyCode === "047")
-        .map((p) => ({ week: p.weekOf.toISOString().slice(0, 10), rate: p.medianRate })),
-    };
-  });
+  const series = ITEM_CATALOGUE.map((item) => ({
+    code: item.code,
+    name: item.itemName,
+    points: prices
+      .filter((p) => p.itemCode === item.code && p.countyCode === "047")
+      .map((p) => ({ week: p.weekOf.toISOString().slice(0, 10), rate: p.medianRate })),
+  }));
   const latest = ITEM_CATALOGUE.map((item) => {
     const rows = prices.filter((p) => p.itemCode === item.code);
     const current = rows.at(-1);

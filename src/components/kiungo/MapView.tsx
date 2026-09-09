@@ -14,6 +14,7 @@ export function MapView(props: {
   height?: number;
   connect?: boolean;
   driftLabel?: string;
+  onPick?: (lat: number, lng: number) => void;
 }) {
   return <Inner {...props} />;
 }

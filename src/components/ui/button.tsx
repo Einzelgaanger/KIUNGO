@@ -14,6 +14,8 @@ const buttonVariants = cva(
           "border border-line bg-surface text-ink-900 hover:bg-forest-50",
         ghost: "text-ink-900 hover:bg-forest-50",
         destructive: "bg-clay-500 text-white hover:bg-clay-500/90",
+        warning: "border border-gold-500 bg-transparent text-gold-500 hover:bg-gold-100",
+        dangerOutline: "border border-clay-500 bg-transparent text-clay-500 hover:bg-clay-100",
         link: "text-forest-900 underline-offset-4 hover:underline min-h-0 min-w-0 h-auto px-0",
         dark: "bg-lime-500 text-forest-900 hover:bg-lime-600",
         darkGhost:

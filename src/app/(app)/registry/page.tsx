@@ -7,17 +7,9 @@ import { PageFade } from "@/components/kiungo/PageFade";
 import { RegistryFilters } from "@/components/kiungo/RegistryFilters";
 import { SectionHeading } from "@/components/kiungo/SectionHeading";
 import { CardGridSkeleton } from "@/components/kiungo/skeletons";
-import { StatusBadge } from "@/components/kiungo/StatusBadge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { RegistryTable } from "@/app/(app)/registry/RegistryTable";
 import { COPY, ENTITY_CATEGORY_LABELS, PAGE_SIZE, countyName } from "@/lib/constants";
 import { parseList, searchEntities } from "@/lib/entities";
 import { formatNumber } from "@/lib/format";
@@ -138,39 +130,18 @@ export default async function RegistryPage({
         ) : null}
 
         {result && result.rows.length > 0 && view === "table" ? (
-          <div className="mt-6 overflow-hidden rounded-lg border border-line">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-0 hover:bg-transparent">
-                  <TableHead>Name</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>County</TableHead>
-                  <TableHead>Verification</TableHead>
-                  <TableHead>Reliability</TableHead>
-                  <TableHead>Deliveries</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {result.rows.map((entity) => (
-                  <TableRow key={entity.id}>
-                    <TableCell>
-                      <Link href={`/registry/${entity.slug}`} className="font-medium text-ink-900">
-                        {entity.legalName}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{ENTITY_CATEGORY_LABELS[entity.category]}</TableCell>
-                    <TableCell>{countyName(entity.countyCode)}</TableCell>
-                    <TableCell>
-                      <StatusBadge status={entity.verification} size="sm" />
-                    </TableCell>
-                    <TableCell className="tabular-nums">
-                      {entity.reliability ?? "—"}
-                    </TableCell>
-                    <TableCell className="tabular-nums">{entity._count.claims}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <div className="mt-6">
+            <RegistryTable
+              rows={result.rows.map((entity) => ({
+                slug: entity.slug,
+                legalName: entity.legalName,
+                category: ENTITY_CATEGORY_LABELS[entity.category],
+                county: countyName(entity.countyCode),
+                verification: entity.verification,
+                reliability: entity.reliability,
+                deliveries: entity._count.claims,
+              }))}
+            />
           </div>
         ) : null}
 

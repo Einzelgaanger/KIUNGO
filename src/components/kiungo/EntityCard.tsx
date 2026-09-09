@@ -8,6 +8,7 @@ import { ENTITY_CATEGORY_LABELS, countyName } from "@/lib/constants";
 import { initials } from "@/lib/format";
 import { parseStringArray } from "@/lib/json";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export type EntityCardModel = Entity & {
   certifications?: Certification[];
@@ -40,14 +41,13 @@ export function EntityCard({
   }
 
   return (
-    <Link
-      href={href}
+    <div
       className={cn(
         "rounded-lg border border-line bg-surface p-4 shadow-xs transition-colors duration-150 hover:border-forest-600",
         variant === "row" && "flex items-center gap-4 p-4 md:p-5",
       )}
     >
-      <div className={cn("flex items-start gap-3", variant === "row" && "flex-1")}>
+      <Link href={href} className={cn("flex items-start gap-3", variant === "row" && "flex-1")}>
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-100 font-display text-sm font-medium text-forest-900">
           {initials(entity.legalName)}
         </span>
@@ -69,12 +69,23 @@ export function EntityCard({
             </div>
           ) : null}
         </div>
-      </div>
+      </Link>
       <div className={cn("mt-4 flex flex-wrap items-center gap-2", variant === "row" && "mt-0")}>
         {cert ? (
-          <span title={`${cert.authority} · ${cert.number}`}>
-            <VerificationBadge certification={cert} />
-          </span>
+          <Popover>
+            <PopoverTrigger className="min-h-11" aria-label="Certification detail">
+              <VerificationBadge certification={cert} />
+            </PopoverTrigger>
+            <PopoverContent className="w-64">
+              <p className="text-sm font-medium">{cert.authority}</p>
+              <p className="font-mono text-xs">{cert.number}</p>
+              {cert.expiresAt ? (
+                <p className="mt-1 text-xs text-ink-600">
+                  Valid to {String(cert.expiresAt).slice(0, 10)}
+                </p>
+              ) : null}
+            </PopoverContent>
+          </Popover>
         ) : (
           <StatusBadge status={entity.verification} />
         )}
@@ -83,6 +94,6 @@ export function EntityCard({
           {entity._count?.claims ?? 0} deliveries
         </span>
       </div>
-    </Link>
+    </div>
   );
 }

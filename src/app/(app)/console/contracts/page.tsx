@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { FileText } from "lucide-react";
+import { EmptyState } from "@/components/kiungo/EmptyState";
 import Link from "next/link";
 import { PageFade } from "@/components/kiungo/PageFade";
 import { SectionHeading } from "@/components/kiungo/SectionHeading";
@@ -30,6 +32,13 @@ export default async function ContractsPage() {
     <PageFade>
       <div className="mx-auto w-full max-w-[1400px] px-4 py-8 md:px-8">
         <SectionHeading eyebrow="Deliver" title="Contract lines" />
+        {contracts.length === 0 ? (
+          <EmptyState
+            icon={FileText}
+            title="No contracts yet."
+            description="Active contract lines will appear here with remaining balances you can claim against."
+          />
+        ) : (
         <div className="mt-6 space-y-4">
           {contracts.map((contract) => (
             <div key={contract.id} className="rounded-lg border border-line bg-surface p-5">
@@ -63,6 +72,7 @@ export default async function ContractsPage() {
             </div>
           ))}
         </div>
+        )}
       </div>
     </PageFade>
   );

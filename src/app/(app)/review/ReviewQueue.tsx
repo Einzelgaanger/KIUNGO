@@ -22,28 +22,47 @@ type QueueItem = Claim & {
 
 export function ReviewQueue({ items }: { items: QueueItem[] }) {
   const router = useRouter();
-  const [activeId, setActiveId] = useState(items[0]?.id ?? null);
+  const [siteFilter, setSiteFilter] = useState("all");
+  const [ageFilter, setAgeFilter] = useState("all");
+  const [checkFilter, setCheckFilter] = useState("all");
+  const [verifyFilter, setVerifyFilter] = useState("all");
+  const filtered = useMemo(() => {
+    const now = new Date(DEMO_NOW_ISO).getTime();
+    return items.filter((item) => {
+      if (siteFilter !== "all" && item.site.id !== siteFilter) return false;
+      const ageH = (now - new Date(item.submittedAt).getTime()) / 36e5;
+      if (ageFilter === "24" && ageH <= 24) return false;
+      if (ageFilter === "48" && ageH <= 48) return false;
+      const allPass = item.edgeChecks.length > 0 && item.edgeChecks.every((c) => c.passed);
+      if (checkFilter === "pass" && !allPass) return false;
+      if (checkFilter === "fail" && allPass) return false;
+      if (verifyFilter !== "all" && item.entity.verification !== verifyFilter) return false;
+      return true;
+    });
+  }, [items, siteFilter, ageFilter, checkFilter, verifyFilter]);
+  const sites = useMemo(() => Array.from(new Map(items.map((i) => [i.site.id, i.site])).values()), [items]);
+  const [activeId, setActiveId] = useState(filtered[0]?.id ?? items[0]?.id ?? null);
   const [selected, setSelected] = useState<string[]>([]);
   const [comment, setComment] = useState("");
   const [pending, start] = useTransition();
-  const active = items.find((item) => item.id === activeId) ?? items[0];
+  const active = filtered.find((item) => item.id === activeId) ?? filtered[0];
 
   const grouped = useMemo(() => {
     const map = new Map<string, QueueItem[]>();
-    for (const item of items) {
+    for (const item of filtered) {
       const list = map.get(item.site.name) ?? [];
       list.push(item);
       map.set(item.site.name, list);
     }
     return map;
-  }, [items]);
+  }, [filtered]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (!active) return;
-      const idx = items.findIndex((item) => item.id === active.id);
-      if (e.key === "j" || e.key === "J") setActiveId(items[Math.min(items.length - 1, idx + 1)]?.id ?? active.id);
-      if (e.key === "k" || e.key === "K") setActiveId(items[Math.max(0, idx - 1)]?.id ?? active.id);
+      const idx = filtered.findIndex((item) => item.id === active.id);
+      if (e.key === "j" || e.key === "J") setActiveId(filtered[Math.min(filtered.length - 1, idx + 1)]?.id ?? active.id);
+      if (e.key === "k" || e.key === "K") setActiveId(filtered[Math.max(0, idx - 1)]?.id ?? active.id);
       if (e.key === "a" || e.key === "A") decide("APPROVE");
       if (e.key === "q" || e.key === "Q") decide("QUERY");
       if (e.key === "r" || e.key === "R") decide("REJECT");
@@ -51,7 +70,7 @@ export function ReviewQueue({ items }: { items: QueueItem[] }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, comment, items]);
+  }, [active, comment, filtered]);
 
   function decide(decision: "APPROVE" | "QUERY" | "REJECT") {
     if (!active) return;
@@ -66,7 +85,7 @@ export function ReviewQueue({ items }: { items: QueueItem[] }) {
         return;
       }
       toast.success(`${decision} recorded`);
-      const remaining = items.filter((item) => item.id !== active.id);
+      const remaining = filtered.filter((item) => item.id !== active.id);
       setActiveId(remaining[0]?.id ?? null);
       setComment("");
       router.refresh();
@@ -78,6 +97,31 @@ export function ReviewQueue({ items }: { items: QueueItem[] }) {
     .some((item) => item.edgeChecks.some((check) => !check.passed && check.check !== "exif_gps_match"));
 
   return (
+    <div>
+      <div className="flex flex-wrap gap-2 border-b border-line p-3">
+        <select className="min-h-11 rounded-md border border-line bg-surface px-3 text-sm" value={siteFilter} onChange={(e) => setSiteFilter(e.target.value)} aria-label="Site">
+          <option value="all">All sites</option>
+          {sites.map((site) => (
+            <option key={site.id} value={site.id}>{site.name}</option>
+          ))}
+        </select>
+        <select className="min-h-11 rounded-md border border-line bg-surface px-3 text-sm" value={ageFilter} onChange={(e) => setAgeFilter(e.target.value)} aria-label="Age">
+          <option value="all">Any age</option>
+          <option value="24">Older than 24h</option>
+          <option value="48">Older than 48h</option>
+        </select>
+        <select className="min-h-11 rounded-md border border-line bg-surface px-3 text-sm" value={checkFilter} onChange={(e) => setCheckFilter(e.target.value)} aria-label="Edge checks">
+          <option value="all">Any edge-check outcome</option>
+          <option value="pass">All passed</option>
+          <option value="fail">Any failed</option>
+        </select>
+        <select className="min-h-11 rounded-md border border-line bg-surface px-3 text-sm" value={verifyFilter} onChange={(e) => setVerifyFilter(e.target.value)} aria-label="Verification">
+          <option value="all">Any verification</option>
+          <option value="VERIFIED">Verified</option>
+          <option value="PENDING">Pending</option>
+          <option value="UNVERIFIED">Unverified</option>
+        </select>
+      </div>
     <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr]">
       <div className="border-r border-line">
         {[...grouped.entries()].map(([site, list]) => (
@@ -157,7 +201,14 @@ export function ReviewQueue({ items }: { items: QueueItem[] }) {
               {active.contractLine.itemName} · {active.quantity} {active.contractLine.unit}
             </p>
             <div className="mt-4">
-              <EvidenceViewer evidence={active.evidence} checks={active.edgeChecks} claimRef={active.ref} />
+              <EvidenceViewer
+                evidence={active.evidence}
+                checks={active.edgeChecks}
+                claimRef={active.ref}
+                deviceLat={active.submittedLat}
+                deviceLng={active.submittedLng}
+                driftMeters={active.driftMeters}
+              />
             </div>
             <Textarea
               className="mt-4"
@@ -169,10 +220,10 @@ export function ReviewQueue({ items }: { items: QueueItem[] }) {
               <Button variant="accent" disabled={pending} onClick={() => decide("APPROVE")}>
                 Approve
               </Button>
-              <Button variant="outline" disabled={pending} onClick={() => decide("QUERY")}>
+              <Button variant="warning" disabled={pending} onClick={() => decide("QUERY")}>
                 Query
               </Button>
-              <Button variant="destructive" disabled={pending} onClick={() => decide("REJECT")}>
+              <Button variant="dangerOutline" disabled={pending} onClick={() => decide("REJECT")}>
                 Reject
               </Button>
             </div>
@@ -182,6 +233,7 @@ export function ReviewQueue({ items }: { items: QueueItem[] }) {
           <p className="text-sm text-ink-600">Select a claim.</p>
         )}
       </div>
+    </div>
     </div>
   );
 }

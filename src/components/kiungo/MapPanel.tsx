@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -18,6 +18,15 @@ const forestIcon = L.divIcon({
   iconSize: [14, 14],
   iconAnchor: [7, 7],
 });
+
+function Pick({ onPick }: { onPick: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e) {
+      onPick(e.latlng.lat, e.latlng.lng);
+    },
+  });
+  return null;
+}
 
 function Fit({ points }: { points: MapPoint[] }) {
   const map = useMap();
@@ -41,11 +50,13 @@ export function MapPanel({
   height = 240,
   connect = false,
   driftLabel,
+  onPick,
 }: {
   points: MapPoint[];
   height?: number;
   connect?: boolean;
   driftLabel?: string;
+  onPick?: (lat: number, lng: number) => void;
 }) {
   const center = points[0] ?? { lat: -1.2864, lng: 36.8172, label: "Nairobi" };
   return (
@@ -61,6 +72,7 @@ export function MapPanel({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Fit points={points} />
+        {onPick ? <Pick onPick={onPick} /> : null}
         {points.map((point) => (
           <Marker key={`${point.lat}-${point.lng}-${point.label}`} position={[point.lat, point.lng]} icon={forestIcon}>
             <Popup>{point.label}</Popup>

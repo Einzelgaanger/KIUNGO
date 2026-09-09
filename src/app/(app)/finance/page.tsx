@@ -95,13 +95,17 @@ export default async function FinancePage() {
         () =>
           prisma.entity.findUnique({
             where: { id: entityId },
-            include: { claims: true, financeApps: { include: { product: true } } },
+            include: { claims: { include: { valueOutcome: true } }, financeApps: { include: { product: true } } },
           }),
         null,
       )
     : null;
   const products = await withDb(() => prisma.financeProduct.findMany(), []);
   const completed = entity?.claims.filter((c) => c.status === "SETTLED" || c.status === "APPROVED").length ?? 0;
+  const settledValue =
+    entity?.claims
+      .filter((c) => c.status === "SETTLED")
+      .reduce((s, c) => s + (c.valueOutcome?.supplierShare ?? 0), 0) ?? 0;
   const available = products.filter((p) => {
     if (!entity) return false;
     if (p.requiresVerified && entity.verification !== "VERIFIED") return false;
@@ -120,7 +124,7 @@ export default async function FinancePage() {
               <StatusBadge status={entity.verification} />
             </div>
             <p className="mt-3 text-sm text-ink-600">
-              Based on {completed} verified deliveries over 6 months, {available.length} of {products.length} products are available to you.
+              Based on {completed} verified deliveries worth {formatKes(settledValue)} over 6 months, {available.length} of {products.length} products are available to you.
             </p>
           </div>
         ) : null}

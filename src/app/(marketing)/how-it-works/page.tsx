@@ -10,6 +10,17 @@ export default function HowItWorksPage() {
         <div className="h-[3px] w-9 rounded-full bg-lime-500" />
         <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400">How it works</p>
         <h1 className="mt-2 font-display text-3xl font-semibold">From delivery to settlement</h1>
+        <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-center">
+          {["Submit", "Verify", "Route", "Review", "Compute", "Settle"].map((step, i, arr) => (
+            <div key={step} className="flex flex-1 items-center gap-3">
+              <div className="w-full rounded-lg border border-line bg-surface p-4">
+                <p className="font-display text-2xl font-bold text-lime-700">{i + 1}</p>
+                <p className="mt-1 font-medium">{step}</p>
+              </div>
+              {i < arr.length - 1 ? <span className="hidden text-lime-700 md:block">→</span> : null}
+            </div>
+          ))}
+        </div>
         <ol className="mt-8 max-w-2xl space-y-4 text-sm leading-relaxed text-ink-600">
           <li>1. A supplier submits quantity, a photo and a GPS pin — WhatsApp or web.</li>
           <li>2. Edge checks test EXIF, timestamp, duplicate hash and contract balance.</li>

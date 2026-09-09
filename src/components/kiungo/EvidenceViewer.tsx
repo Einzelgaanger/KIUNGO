@@ -2,17 +2,23 @@
 
 import { useState } from "react";
 import type { EdgeCheck, Evidence } from "@prisma/client";
+import { CheckChip } from "@/components/kiungo/CheckChip";
 import { formatDateTimeAbsolute, formatHashPrefix, formatLatLng } from "@/lib/format";
-import { cn } from "@/lib/utils";
 
 export function EvidenceViewer({
   evidence,
   checks,
   claimRef,
+  deviceLat,
+  deviceLng,
+  driftMeters,
 }: {
   evidence: Evidence[];
   checks: EdgeCheck[];
   claimRef: string;
+  deviceLat?: number;
+  deviceLng?: number;
+  driftMeters?: number | null;
 }) {
   const [open, setOpen] = useState<string | null>(null);
   const photo = evidence[0];
@@ -31,7 +37,7 @@ export function EvidenceViewer({
             alt={`Delivery evidence for ${claimRef}`}
             className="h-56 w-full object-cover bg-forest-100"
           />
-          <div className="grid grid-cols-2 gap-2 bg-forest-50 p-3 font-mono text-[11px] tabular-nums text-ink-600 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 bg-forest-50 p-3 font-mono text-[11px] tabular-nums text-ink-600 md:grid-cols-3">
             <span>Captured {item.capturedAt ? formatDateTimeAbsolute(item.capturedAt) : "—"}</span>
             <span>
               EXIF{" "}
@@ -39,6 +45,11 @@ export function EvidenceViewer({
                 ? formatLatLng(item.exifLat, item.exifLng)
                 : "none"}
             </span>
+            <span>
+              Device{" "}
+              {deviceLat != null && deviceLng != null ? formatLatLng(deviceLat, deviceLng) : "—"}
+            </span>
+            <span>Drift {driftMeters != null ? `${driftMeters} m` : "—"}</span>
             <span>Hash {formatHashPrefix(item.sha256)}</span>
             <span>{item.deviceHint ?? "device"}</span>
           </div>
@@ -46,15 +57,7 @@ export function EvidenceViewer({
       ))}
       <div className="flex flex-wrap gap-2">
         {checks.map((check) => (
-          <span
-            key={check.id}
-            className={cn(
-              "rounded-pill px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
-              check.passed ? "bg-lime-100 text-lime-700" : "bg-clay-100 text-clay-500",
-            )}
-          >
-            {check.passed ? "Pass" : "Fail"} · {check.check.replaceAll("_", " ")}
-          </span>
+          <CheckChip key={check.id} passed={check.passed} label={check.check.replaceAll("_", " ")} />
         ))}
       </div>
       {open && photo ? (
