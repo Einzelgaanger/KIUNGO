@@ -22,3 +22,8 @@ Logged as the build proceeds. The specification is the source of truth; this fil
 - Delivery JPEGs in `public/mock` are valid solid-colour files with a unique COM comment. They are not photographs of sites.
 - Section 11.3 quotes a 1.05 multiplier for 40 × KSh 4,850. Section 13.2 adds +0.03 for 84 m drift and +0.02 for a same-day review, so the engine yields 1.10 / KSh 213,400. The live UI will show the computed receipt.
 - Reliability is computed from claim history after seed. Amina's score is whatever that function returns; it is not forced to 78.
+
+## Phase 3
+
+- `<MapPanel>` was built in Phase 3 because the entity profile (10.3) requires a site map. Phase 4 will reuse it on claim and site pages.
+- Ownership filtering happens in memory after the SQL page fetch because tags are stored as a JSON string in SQLite. Filtered totals can therefore differ from unfiltered pagination when ownership is set.

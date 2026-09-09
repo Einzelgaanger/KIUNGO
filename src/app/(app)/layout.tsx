@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/kiungo/AppSidebar";
 import { MobileTabBar } from "@/components/kiungo/MobileTabBar";
+import { ShortlistProvider } from "@/components/kiungo/ShortlistProvider";
 import { UnauthorisedState } from "@/components/kiungo/UnauthorisedState";
 import { rolesForPath } from "@/lib/constants";
 import { getSession } from "@/lib/session";
@@ -22,7 +23,9 @@ export default async function AppLayout({
       <div className="flex">
         <AppSidebar session={session} />
         <div className="min-w-0 flex-1 pb-20 md:pb-0">
-          {authorised ? children : <UnauthorisedState session={session} />}
+          <ShortlistProvider>
+            {authorised ? children : <UnauthorisedState session={session} />}
+          </ShortlistProvider>
         </div>
       </div>
       <MobileTabBar session={session} />
