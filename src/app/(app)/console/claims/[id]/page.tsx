@@ -10,6 +10,7 @@ import { CopyButton } from "@/components/kiungo/CopyButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { COPY } from "@/lib/constants";
 import { prisma } from "@/lib/db";
+import { withDb } from "@/lib/safe-db";
 import { formatDatePair, formatHashPrefix, formatKes, formatQuantity } from "@/lib/format";
 import { getSession } from "@/lib/session";
 
@@ -24,19 +25,23 @@ export default async function ClaimDetailPage({
 }) {
   const { id } = await params;
   const session = await getSession();
-  const claim = await prisma.claim.findUnique({
-    where: { id },
-    include: {
-      contractLine: true,
-      contract: { include: { buyer: true } },
-      site: true,
-      evidence: true,
-      edgeChecks: true,
-      reviews: { include: { reviewer: true } },
-      valueOutcome: { include: { settlement: true } },
-      entity: true,
-    },
-  });
+  const claim = await withDb(
+    () =>
+      prisma.claim.findUnique({
+        where: { id },
+        include: {
+          contractLine: true,
+          contract: { include: { buyer: true } },
+          site: true,
+          evidence: true,
+          edgeChecks: true,
+          reviews: { include: { reviewer: true } },
+          valueOutcome: { include: { settlement: true } },
+          entity: true,
+        },
+      }),
+    null,
+  );
   if (!claim) notFound();
   const party = session.entityId === claim.entityId || session.entityId === claim.contract.buyerId || session.role === "REVIEWER" || session.role === "PROGRAMME";
 

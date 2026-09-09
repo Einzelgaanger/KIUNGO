@@ -6,15 +6,20 @@ import { SectionHeading } from "@/components/kiungo/SectionHeading";
 import { ReviewQueue } from "@/app/(app)/review/ReviewQueue";
 import { COPY } from "@/lib/constants";
 import { prisma } from "@/lib/db";
+import { withDb } from "@/lib/safe-db";
 
 export const metadata: Metadata = { title: "Review queue" };
 
 export default async function ReviewPage() {
-  const items = await prisma.claim.findMany({
-    where: { status: { in: ["QUEUED", "EDGE_CHECKED", "SUBMITTED", "FLAGGED"] } },
-    include: { entity: true, contractLine: true, site: true, evidence: true, edgeChecks: true },
-    orderBy: { submittedAt: "asc" },
-  });
+  const items = await withDb(
+    () =>
+      prisma.claim.findMany({
+        where: { status: { in: ["QUEUED", "EDGE_CHECKED", "SUBMITTED", "FLAGGED"] } },
+        include: { entity: true, contractLine: true, site: true, evidence: true, edgeChecks: true },
+        orderBy: { submittedAt: "asc" },
+      }),
+    [],
+  );
 
   return (
     <PageFade>

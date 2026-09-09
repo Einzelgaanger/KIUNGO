@@ -6,18 +6,24 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { prisma } from "@/lib/db";
 import { formatDatePair, formatKes } from "@/lib/format";
+import { withDb } from "@/lib/safe-db";
 import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Contracts" };
 
 export default async function ContractsPage() {
   const session = await getSession();
-  const contracts = session.entityId
-    ? await prisma.contract.findMany({
-        where: { supplierId: session.entityId },
-        include: { site: true, buyer: true, lines: true },
-        orderBy: { awardedAt: "desc" },
-      })
+  const entityId = session.entityId;
+  const contracts = entityId
+    ? await withDb(
+        () =>
+          prisma.contract.findMany({
+            where: { supplierId: entityId },
+            include: { site: true, buyer: true, lines: true },
+            orderBy: { awardedAt: "desc" },
+          }),
+        [],
+      )
     : [];
 
   return (

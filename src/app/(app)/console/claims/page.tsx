@@ -6,6 +6,7 @@ import { PageFade } from "@/components/kiungo/PageFade";
 import { SectionHeading } from "@/components/kiungo/SectionHeading";
 import { COPY } from "@/lib/constants";
 import { prisma } from "@/lib/db";
+import { withDb } from "@/lib/safe-db";
 import { getSession } from "@/lib/session";
 import type { ClaimStatus } from "@/types";
 
@@ -18,15 +19,20 @@ export default async function ClaimsPage({
 }) {
   const session = await getSession();
   const { status } = await searchParams;
-  const claims = session.entityId
-    ? await prisma.claim.findMany({
-        where: {
-          entityId: session.entityId,
-          ...(status ? { status: status as ClaimStatus } : {}),
-        },
-        include: { contractLine: true, site: true, valueOutcome: true },
-        orderBy: { submittedAt: "desc" },
-      })
+  const entityId = session.entityId;
+  const claims = entityId
+    ? await withDb(
+        () =>
+          prisma.claim.findMany({
+            where: {
+              entityId,
+              ...(status ? { status: status as ClaimStatus } : {}),
+            },
+            include: { contractLine: true, site: true, valueOutcome: true },
+            orderBy: { submittedAt: "desc" },
+          }),
+        [],
+      )
     : [];
 
   return (

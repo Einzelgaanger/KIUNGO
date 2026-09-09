@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import type { Claim, ContractLine, EdgeCheck, Entity, Evidence, Site } from "@prisma/client";
+import { DEMO_NOW_ISO } from "@/lib/constants";
 import { formatRelative } from "@/lib/format";
 
 type QueueItem = Claim & {
@@ -86,7 +87,7 @@ export function ReviewQueue({ items }: { items: QueueItem[] }) {
             </p>
             {list.map((item) => {
               const submittedAt = new Date(item.submittedAt);
-              const ageH = (Date.now() - submittedAt.getTime()) / 36e5;
+              const ageH = (new Date(DEMO_NOW_ISO).getTime() - submittedAt.getTime()) / 36e5;
               return (
                 <div key={item.id} className="flex items-center gap-2 px-2">
                   <Checkbox

@@ -27,3 +27,25 @@ Logged as the build proceeds. The specification is the source of truth; this fil
 
 - `<MapPanel>` was built in Phase 3 because the entity profile (10.3) requires a site map. Phase 4 will reuse it on claim and site pages.
 - Ownership filtering happens in memory after the SQL page fetch because tags are stored as a JSON string in SQLite. Filtered totals can therefore differ from unfiltered pagination when ownership is set.
+
+## Phase 5
+
+- The WhatsApp approval bubble after three seconds is theatrical copy from §11.3. It does **not** call `decideClaim`, so the live claim remains `QUEUED` for Daniel's review queue — that is the demo beat.
+- Live value after a real approval follows §13.2 (typically 1.10 / KSh 213,400 for the 40-unit door-frame example), not the chat script's 1.05 / KSh 203,700.
+
+## Phase 6
+
+- Intelligence date/site/county filters are URL search params and recompute server-side.
+- Materials item selection is fixed to four catalogue lines (cement, D12, door frame, aluminium window) so the demo is stable.
+- Financier sparklines are 12-week claim counts, 60×20, no axes.
+
+## Phase 7
+
+- Citizen estimate bands use m²-per-bedroom × finish rate so a 3-bed standard Nairobi house lands in KSh 3.4m–4.6m.
+- Open Graph images for entity profiles live at `(app)/registry/[slug]/opengraph-image.tsx` so they share the `/registry/[slug]` route. `ImageResponse` cannot resolve CSS variables, so forest/lime hex values are inlined there only.
+
+## Phase 8
+
+- Unseeded databases are handled with `withDb()` so Prisma connection/schema errors render empty or fallback UI instead of crashing.
+- Review-queue age dots use `DEMO_NOW_ISO` (9 Sep 2026), not the machine clock.
+- Swahili remains a production requirement; the MVP is English-only as specified.

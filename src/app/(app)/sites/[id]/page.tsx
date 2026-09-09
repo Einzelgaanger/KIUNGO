@@ -10,6 +10,7 @@ import { StatCard } from "@/components/kiungo/StatCard";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { prisma } from "@/lib/db";
+import { withDb } from "@/lib/safe-db";
 import { countyName } from "@/lib/constants";
 import { formatDatePair } from "@/lib/format";
 
@@ -21,14 +22,18 @@ export default async function SitePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const site = await prisma.site.findFirst({
-    where: { OR: [{ id }, { slug: id }] },
-    include: {
-      programme: true,
-      claims: { include: { contractLine: true, site: true, entity: true }, take: 20, orderBy: { submittedAt: "desc" } },
-      contracts: { include: { supplier: true, lines: true } },
-    },
-  });
+  const site = await withDb(
+    () =>
+      prisma.site.findFirst({
+        where: { OR: [{ id }, { slug: id }] },
+        include: {
+          programme: true,
+          claims: { include: { contractLine: true, site: true, entity: true }, take: 20, orderBy: { submittedAt: "desc" } },
+          contracts: { include: { supplier: true, lines: true } },
+        },
+      }),
+    null,
+  );
   if (!site) notFound();
   const pct = site.unitsPlanned === 0 ? 0 : (site.unitsComplete / site.unitsPlanned) * 100;
   const suppliers = Array.from(new Map(site.contracts.map((c) => [c.supplier.id, c.supplier])).values());

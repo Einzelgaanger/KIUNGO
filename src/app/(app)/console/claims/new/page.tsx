@@ -4,17 +4,23 @@ import { ClaimWizard } from "@/app/(app)/console/claims/new/ClaimWizard";
 import { PageFade } from "@/components/kiungo/PageFade";
 import { SectionHeading } from "@/components/kiungo/SectionHeading";
 import { prisma } from "@/lib/db";
+import { withDb } from "@/lib/safe-db";
 import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Submit a delivery" };
 
 export default async function NewClaimPage() {
   const session = await getSession();
-  const lines = session.entityId
-    ? await prisma.contractLine.findMany({
-        where: { contract: { supplierId: session.entityId, status: "ACTIVE" } },
-        include: { contract: { include: { site: true, buyer: true } } },
-      })
+  const entityId = session.entityId;
+  const lines = entityId
+    ? await withDb(
+        () =>
+          prisma.contractLine.findMany({
+            where: { contract: { supplierId: entityId, status: "ACTIVE" } },
+            include: { contract: { include: { site: true, buyer: true } } },
+          }),
+        [],
+      )
     : [];
 
   return (

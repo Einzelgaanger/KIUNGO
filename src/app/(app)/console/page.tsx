@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { prisma } from "@/lib/db";
 import { formatKesCompact } from "@/lib/format";
+import { withDb } from "@/lib/safe-db";
 import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Console" };
@@ -29,11 +30,16 @@ export default async function ConsolePage() {
 
   const now = new Date("2026-09-09T12:00:00.000Z");
   const monthStart = new Date("2026-09-01T00:00:00.000Z");
-  const entity = await prisma.entity.findUnique({
-    where: { id: entityId },
-    include: { certifications: true },
-  });
-  const [claims, lines, queried, monthClaims, monthValue] = await Promise.all([
+  const entity = await withDb(
+    () =>
+      prisma.entity.findUnique({
+        where: { id: entityId },
+        include: { certifications: true },
+      }),
+    null,
+  );
+  const [claims, lines, queried, monthClaims, monthValue] = await withDb(
+    () => Promise.all([
     prisma.claim.findMany({
       where: { entityId },
       include: { contractLine: true, site: true, valueOutcome: true },
@@ -50,7 +56,9 @@ export default async function ConsolePage() {
       where: { claim: { entityId }, computedAt: { gte: monthStart } },
       _sum: { supplierShare: true },
     }),
-  ]);
+  ]),
+    [[], [], 0, 0, { _sum: { supplierShare: 0 } }],
+  );
 
   const expiring = (entity?.certifications ?? []).filter((cert) => {
     if (!cert.expiresAt) return false;
