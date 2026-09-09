@@ -1,0 +1,110 @@
+[
+  {
+    "providerName": "Sample Bank A",
+    "productName": "Supplier Invoice Advance",
+    "kind": "INVOICE_DISCOUNT",
+    "minAmount": 50000,
+    "maxAmount": 3000000,
+    "ratePctAnnual": 28.8,
+    "tenorMonths": 3,
+    "minReliability": 65,
+    "requiresVerified": true,
+    "blurb": "Advance against an approved delivery claim. Price is 2.4% per month on the advanced amount."
+  },
+  {
+    "providerName": "Sample Bank B",
+    "productName": "Contractor Working Capital",
+    "kind": "STOCK_CREDIT",
+    "minAmount": 200000,
+    "maxAmount": 10000000,
+    "ratePctAnnual": 18,
+    "tenorMonths": 12,
+    "minReliability": 70,
+    "requiresVerified": true,
+    "blurb": "A twelve-month working-capital line for contractors with a verified Kiungo history."
+  },
+  {
+    "providerName": "Sample SACCO",
+    "productName": "Jua Kali Asset Finance",
+    "kind": "ASSET_FINANCE",
+    "minAmount": 80000,
+    "maxAmount": 2000000,
+    "ratePctAnnual": 15,
+    "tenorMonths": 24,
+    "minReliability": 55,
+    "requiresVerified": true,
+    "blurb": "Tools, welders and small plant, repaid over 24 months against evidenced deliveries."
+  },
+  {
+    "providerName": "Sample SACCO",
+    "productName": "Group Tool Loan",
+    "kind": "ASSET_FINANCE",
+    "minAmount": 20000,
+    "maxAmount": 500000,
+    "ratePctAnnual": 14,
+    "tenorMonths": 18,
+    "minReliability": 40,
+    "requiresVerified": true,
+    "blurb": "Shared tools for a registered self-help group. Reliability 40 unlocks the product."
+  },
+  {
+    "providerName": "Sample MFI",
+    "productName": "Order Fulfilment Credit",
+    "kind": "STOCK_CREDIT",
+    "minAmount": 30000,
+    "maxAmount": 800000,
+    "ratePctAnnual": 37.2,
+    "tenorMonths": 6,
+    "minReliability": 50,
+    "requiresVerified": true,
+    "blurb": "Short stock credit to fulfil a confirmed order. Price is 3.1% per month."
+  },
+  {
+    "providerName": "Sample Bank A",
+    "productName": "Affordable Housing Mortgage",
+    "kind": "MORTGAGE",
+    "minAmount": 1000000,
+    "maxAmount": 8000000,
+    "ratePctAnnual": 9.9,
+    "tenorMonths": 300,
+    "minReliability": 0,
+    "requiresVerified": false,
+    "blurb": "A 25-year mortgage for a completed AHP unit. Citizen product; no supplier score required."
+  },
+  {
+    "providerName": "Sample Bank C",
+    "productName": "Diaspora Home Loan",
+    "kind": "MORTGAGE",
+    "minAmount": 2000000,
+    "maxAmount": 15000000,
+    "ratePctAnnual": 11.4,
+    "tenorMonths": 240,
+    "minReliability": 0,
+    "requiresVerified": false,
+    "blurb": "Home loan for Kenyans abroad buying into the Affordable Housing Programme."
+  },
+  {
+    "providerName": "Sample Insurer",
+    "productName": "Contractors All Risk",
+    "kind": "INSURANCE",
+    "minAmount": 100000,
+    "maxAmount": 50000000,
+    "ratePctAnnual": 0,
+    "tenorMonths": 12,
+    "minReliability": 0,
+    "requiresVerified": true,
+    "blurb": "Site all-risk cover priced off the verified contract, not a paper quotation."
+  },
+  {
+    "providerName": "Sample Insurer",
+    "productName": "Delivery Performance Bond",
+    "kind": "INSURANCE",
+    "minAmount": 50000,
+    "maxAmount": 5000000,
+    "ratePctAnnual": 0,
+    "tenorMonths": 6,
+    "minReliability": 60,
+    "requiresVerified": true,
+    "blurb": "A performance bond that a buyer can call if a verified supplier misses a delivery."
+  }
+]

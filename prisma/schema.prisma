@@ -6,3 +6,409 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+// ══════════ CORE (sector-agnostic) ══════════
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  phone      String   @unique // +2547XXXXXXXX
+  email      String?  @unique
+  role       Role
+  entityId   String?
+  entity     Entity?  @relation(fields: [entityId], references: [id])
+  nodeId     String? // hierarchy node they sit at
+  node       Node?    @relation(fields: [nodeId], references: [id])
+  avatarSeed String   @default("k")
+  createdAt  DateTime @default(now())
+  claims     Claim[]  @relation("SubmittedBy")
+  reviews    Review[]
+}
+
+enum Role {
+  SUPPLIER // fabricator, manufacturer, distributor
+  CONTRACTOR // main contractor / developer
+  REVIEWER // site or programme officer
+  PROGRAMME // programme owner, national view
+  FINANCIER // bank / SACCO / insurer
+  CITIZEN
+  ADMIN
+}
+
+// Administrative hierarchy: NATIONAL > COUNTY > CONSTITUENCY > WARD > SITE
+model Node {
+  id       String    @id @default(cuid())
+  name     String
+  level    NodeLevel
+  code     String    @unique
+  parentId String?
+  parent   Node?     @relation("NodeTree", fields: [parentId], references: [id])
+  children Node[]    @relation("NodeTree")
+  lat      Float?
+  lng      Float?
+  users    User[]
+  sites    Site[]
+}
+
+enum NodeLevel {
+  NATIONAL
+  COUNTY
+  CONSTITUENCY
+  WARD
+  SITE
+}
+
+// ══════════ REGISTRY (the asset) ══════════
+
+model Entity {
+  id              String             @id @default(cuid())
+  slug            String             @unique
+  legalName       String
+  tradingName     String?
+  registrationNo  String? // company / business reg
+  category        EntityCategory
+  subcategories   String // JSON string[] e.g. ["doors","windows"]
+  countyCode      String
+  ward            String?
+  lat             Float?
+  lng             Float?
+  contactName     String?
+  contactPhone    String?
+  contactEmail    String?
+  sizeBand        SizeBand
+  ownershipTags   String // JSON string[]: ["YOUTH","WOMEN","PWD","JUA_KALI"]
+  yearEstablished Int?
+  description     String?
+  verification    VerificationStatus @default(UNVERIFIED)
+  reliability     Int? // 0-100, null until 3 deliveries
+  createdAt       DateTime           @default(now())
+
+  users             User[]
+  certifications    Certification[]
+  contracts         Contract[]            @relation("SupplierContracts")
+  awardedContracts  Contract[]            @relation("BuyerContracts")
+  claims            Claim[]
+  relationshipsFrom Relationship[]        @relation("FromEntity")
+  relationshipsTo   Relationship[]        @relation("ToEntity")
+  financeApps       FinanceApplication[]
+}
+
+enum EntityCategory {
+  CONTRACTOR
+  DEVELOPER
+  MANUFACTURER
+  DISTRIBUTOR
+  FABRICATOR
+  PROFESSIONAL
+  TRADE
+  FINANCIER
+  INSURER
+  PUBLIC_BODY
+  LOGISTICS
+}
+
+enum SizeBand {
+  MICRO
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  EXPIRED
+  SUSPENDED
+}
+
+model Certification {
+  id            String             @id @default(cuid())
+  entityId      String
+  entity        Entity             @relation(fields: [entityId], references: [id])
+  authority     String // "NCA", "BORAQS", "EBK", "KEBS", "MSEA", "AGPO"
+  scheme        String // "Contractor Registration"
+  class         String? // "NCA 4 — Building Works"
+  number        String
+  issuedAt      DateTime
+  expiresAt     DateTime?
+  status        VerificationStatus @default(VERIFIED)
+  lastCheckedAt DateTime           @default(now())
+  sourceUrl     String?
+}
+
+model Relationship {
+  id     String   @id @default(cuid())
+  fromId String
+  from   Entity   @relation("FromEntity", fields: [fromId], references: [id])
+  toId   String
+  to     Entity   @relation("ToEntity", fields: [toId], references: [id])
+  type   RelType
+  since  DateTime @default(now())
+  volume Int      @default(0) // number of claims on this edge
+}
+
+enum RelType {
+  SUPPLIES_TO
+  SUBCONTRACTS_TO
+  FINANCES
+  REGULATES
+  INSURES
+}
+
+// ══════════ HOUSING VERTICAL PACK ══════════
+
+model Programme {
+  id    String @id @default(cuid())
+  name  String
+  code  String @unique
+  owner String
+  sites Site[]
+}
+
+model Site {
+  id            String     @id @default(cuid())
+  slug          String     @unique
+  name          String // "Mukuru Phase 2, Embakasi South"
+  programmeId   String
+  programme     Programme  @relation(fields: [programmeId], references: [id])
+  nodeId        String
+  node          Node       @relation(fields: [nodeId], references: [id])
+  countyCode    String
+  lat           Float
+  lng           Float
+  geofenceM     Int        @default(500) // acceptance radius in metres
+  unitsPlanned  Int
+  unitsComplete Int        @default(0)
+  startedAt     DateTime
+  targetAt      DateTime
+  contracts     Contract[]
+  claims        Claim[]
+}
+
+model Contract {
+  id         String         @id @default(cuid())
+  ref        String         @unique // "AHP/MKR/2026/0142"
+  siteId     String
+  site       Site           @relation(fields: [siteId], references: [id])
+  buyerId    String
+  buyer      Entity         @relation("BuyerContracts", fields: [buyerId], references: [id])
+  supplierId String
+  supplier   Entity         @relation("SupplierContracts", fields: [supplierId], references: [id])
+  title      String
+  awardedAt  DateTime
+  expiresAt  DateTime
+  status     ContractStatus @default(ACTIVE)
+  lines      ContractLine[]
+  claims     Claim[]
+}
+
+enum ContractStatus {
+  ACTIVE
+  COMPLETE
+  SUSPENDED
+}
+
+model ContractLine {
+  id              String   @id @default(cuid())
+  contractId      String
+  contract        Contract @relation(fields: [contractId], references: [id])
+  itemCode        String // "DR-STL-900"
+  itemName        String // "Steel door frame 900mm"
+  unit            String // "unit", "tonne", "m3", "bag"
+  quantityTotal   Float
+  quantityClaimed Float    @default(0)
+  unitRate        Int // KES, integer cents-free
+  claims          Claim[]
+}
+
+// ══════════ WORKFLOW ══════════
+
+model Claim {
+  id            String       @id @default(cuid())
+  ref           String       @unique // "CLM-2026-004821"
+  contractId    String
+  contract      Contract     @relation(fields: [contractId], references: [id])
+  contractLineId String
+  contractLine  ContractLine @relation(fields: [contractLineId], references: [id])
+  entityId      String
+  entity        Entity       @relation(fields: [entityId], references: [id])
+  submittedById String
+  submittedBy   User         @relation("SubmittedBy", fields: [submittedById], references: [id])
+  siteId        String
+  site          Site         @relation(fields: [siteId], references: [id])
+
+  quantity Float
+  note     String?
+  channel  Channel @default(WHATSAPP)
+
+  // automatic attribution spine — never user-entered
+  submittedLat   Float
+  submittedLng   Float
+  resolvedNodeId String?
+  driftMeters    Int?
+  submittedAt    DateTime    @default(now())
+  flowVersion    String      @default("housing.delivery.v1")
+
+  status       ClaimStatus   @default(SUBMITTED)
+  evidence     Evidence[]
+  edgeChecks   EdgeCheck[]
+  reviews      Review[]
+  valueOutcome ValueOutcome?
+}
+
+enum Channel {
+  WHATSAPP
+  WEB
+  USSD
+}
+
+enum ClaimStatus {
+  DRAFT
+  SUBMITTED
+  EDGE_CHECKED
+  QUEUED
+  APPROVED
+  QUERIED
+  FLAGGED
+  REJECTED
+  SETTLED
+}
+
+model Evidence {
+  id         String    @id @default(cuid())
+  claimId    String
+  claim      Claim     @relation(fields: [claimId], references: [id])
+  kind       String // "PHOTO" | "DOC"
+  url        String
+  sha256     String
+  exifLat    Float?
+  exifLng    Float?
+  capturedAt DateTime?
+  deviceHint String?
+}
+
+model EdgeCheck {
+  id     String   @id @default(cuid())
+  claimId String
+  claim  Claim    @relation(fields: [claimId], references: [id])
+  check  String // see Section 13.1
+  passed Boolean
+  detail String
+  ranAt  DateTime @default(now())
+}
+
+model Review {
+  id         String         @id @default(cuid())
+  claimId    String
+  claim      Claim          @relation(fields: [claimId], references: [id])
+  reviewerId String
+  reviewer   User           @relation(fields: [reviewerId], references: [id])
+  decision   ReviewDecision
+  comment    String?
+  decidedAt  DateTime       @default(now())
+}
+
+enum ReviewDecision {
+  APPROVE
+  QUERY
+  REJECT
+}
+
+// ══════════ VALUE ══════════
+
+model ValueOutcome {
+  id                String      @id @default(cuid())
+  claimId           String      @unique
+  claim             Claim       @relation(fields: [claimId], references: [id])
+  proofSetHash      String
+  baseAmount        Int // KES
+  qualityMultiplier Float // 0.85 – 1.15
+  grossAmount       Int
+  supplierShare     Int // 80%
+  platformShare     Int // 10%
+  welfareShare      Int // 10%
+  policyVersion     String      @default("housing.tariff.v1")
+  computedAt        DateTime    @default(now())
+  settlement        Settlement?
+}
+
+model Settlement {
+  id             String       @id @default(cuid())
+  valueOutcomeId String       @unique
+  valueOutcome   ValueOutcome @relation(fields: [valueOutcomeId], references: [id])
+  instrument     String       @default("MPESA_B2C")
+  reference      String
+  status         String       @default("SETTLED") // PENDING | SETTLED | FAILED
+  settledAt      DateTime     @default(now())
+}
+
+// ══════════ DEMAND SIDE ══════════
+
+model Opportunity {
+  id          String         @id @default(cuid())
+  ref         String         @unique
+  title       String
+  kind        OppKind
+  buyerName   String
+  countyCode  String
+  category    EntityCategory
+  reservedFor String // JSON string[]: ["YOUTH"] or []
+  valueEst    Int?
+  closesAt    DateTime
+  description String
+}
+
+enum OppKind {
+  TENDER
+  SUBCONTRACT
+  COMPONENT_ORDER
+  CITIZEN_REQUEST
+}
+
+model FinanceProduct {
+  id               String               @id @default(cuid())
+  providerName     String
+  productName      String
+  kind             FinanceKind
+  minAmount        Int
+  maxAmount        Int
+  ratePctAnnual    Float
+  tenorMonths      Int
+  minReliability   Int                  @default(0)
+  requiresVerified Boolean              @default(true)
+  blurb            String
+  applications     FinanceApplication[]
+}
+
+enum FinanceKind {
+  INVOICE_DISCOUNT
+  ASSET_FINANCE
+  STOCK_CREDIT
+  MORTGAGE
+  INSURANCE
+}
+
+model FinanceApplication {
+  id        String         @id @default(cuid())
+  productId String
+  product   FinanceProduct @relation(fields: [productId], references: [id])
+  entityId  String
+  entity    Entity         @relation(fields: [entityId], references: [id])
+  amount    Int
+  status    String         @default("SUBMITTED") // SUBMITTED | IN_REVIEW | OFFERED | DECLINED
+  createdAt DateTime       @default(now())
+}
+
+model MaterialPrice {
+  id         String   @id @default(cuid())
+  itemCode   String
+  itemName   String
+  unit       String
+  countyCode String
+  weekOf     DateTime
+  medianRate Int
+  sampleSize Int
+
+  @@index([itemCode, weekOf])
+}
