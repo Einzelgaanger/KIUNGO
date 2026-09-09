@@ -1,16 +1,48 @@
 import type { Metadata } from "next";
-import { PhasePlaceholder } from "@/components/kiungo/PhasePlaceholder";
+import { Suspense } from "react";
+import { ClaimWizard } from "@/app/(app)/console/claims/new/ClaimWizard";
+import { PageFade } from "@/components/kiungo/PageFade";
+import { SectionHeading } from "@/components/kiungo/SectionHeading";
+import { prisma } from "@/lib/db";
+import { getSession } from "@/lib/session";
 
-export const metadata: Metadata = {
-  title: "Submit a delivery",
-};
+export const metadata: Metadata = { title: "Submit a delivery" };
 
-export default function NewClaimPage() {
+export default async function NewClaimPage() {
+  const session = await getSession();
+  const lines = session.entityId
+    ? await prisma.contractLine.findMany({
+        where: { contract: { supplierId: session.entityId, status: "ACTIVE" } },
+        include: { contract: { include: { site: true, buyer: true } } },
+      })
+    : [];
+
   return (
-    <PhasePlaceholder
-      phase={4}
-      title="Submit a delivery"
-      purpose="Four-step claim wizard: contract line, quantity, evidence and confirm — under 60 seconds."
-    />
+    <PageFade>
+      <div className="mx-auto w-full max-w-[1400px] px-4 py-8 md:px-8">
+        <SectionHeading eyebrow="Deliver" title="Submit a delivery" description="Four steps. Under 60 seconds." />
+        <div className="mt-8">
+          <Suspense>
+            <ClaimWizard
+              lines={lines.map((line) => ({
+                id: line.id,
+                itemName: line.itemName,
+                unit: line.unit,
+                unitRate: line.unitRate,
+                quantityTotal: line.quantityTotal,
+                quantityClaimed: line.quantityClaimed,
+                contractId: line.contractId,
+                contractRef: line.contract.ref,
+                siteName: line.contract.site.name,
+                siteLat: line.contract.site.lat,
+                siteLng: line.contract.site.lng,
+                geofenceM: line.contract.site.geofenceM,
+                buyer: line.contract.buyer.legalName,
+              }))}
+            />
+          </Suspense>
+        </div>
+      </div>
+    </PageFade>
   );
 }

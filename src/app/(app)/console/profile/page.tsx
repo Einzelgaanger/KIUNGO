@@ -1,16 +1,11 @@
-import type { Metadata } from "next";
-import { PhasePlaceholder } from "@/components/kiungo/PhasePlaceholder";
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/session";
+import { prisma } from "@/lib/db";
 
-export const metadata: Metadata = {
-  title: "My profile",
-};
-
-export default function ProfilePage() {
-  return (
-    <PhasePlaceholder
-      phase={4}
-      title="My entity profile"
-      purpose="Certifications, reliability breakdown and the same public profile the registry shows."
-    />
-  );
+export default async function ProfilePage() {
+  const session = await getSession();
+  if (!session.entityId) redirect("/registry");
+  const entity = await prisma.entity.findUnique({ where: { id: session.entityId } });
+  if (!entity) redirect("/registry");
+  redirect(`/registry/${entity.slug}`);
 }
