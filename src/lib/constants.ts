@@ -416,6 +416,7 @@ export const COPY = {
   },
 } as const;
 
+export const DEMO_NOW_ISO = "2026-09-09T12:00:00.000Z";
 export const POLICY_VERSION = "housing.tariff.v1";
 export const FLOW_VERSION = "housing.delivery.v1";
 export const PAGE_SIZE = 24;
