@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Inter, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -28,12 +29,20 @@ const plex = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Kiungo — Sector operating infrastructure for Kenya",
     template: "%s | Kiungo",
   },
   description:
     "Kiungo is the operating layer for a sector. Vertical one is housing and construction.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Kiungo",
+    locale: "en_KE",
+  },
   icons: {
     icon: "/icon",
     apple: "/apple-icon",

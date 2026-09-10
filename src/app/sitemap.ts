@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
+import { SITE_URL } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = "https://kiungo.example";
+  const base = SITE_URL;
   let entities: { slug: string }[] = [];
   try {
     entities = await prisma.entity.findMany({ select: { slug: true } });

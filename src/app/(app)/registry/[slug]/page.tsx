@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { COPY, ENTITY_CATEGORY_LABELS, countyName } from "@/lib/constants";
 import { getEntityBySlug, scoreForEntity } from "@/lib/entities";
+import { SITE_URL } from "@/lib/site";
 import { formatDatePair, formatQuantity, initials } from "@/lib/format";
 import { parseStringArray } from "@/lib/json";
 import { getSession } from "@/lib/session";
@@ -39,6 +40,11 @@ export async function generateMetadata({
     return {
       title: `${entity.legalName} — verified ${ENTITY_CATEGORY_LABELS[entity.category].toLowerCase()} in ${countyName(entity.countyCode)}`,
       description: entity.description ?? `${entity.legalName} on the Kiungo registry.`,
+      alternates: { canonical: `/registry/${entity.slug}` },
+      openGraph: {
+        url: `${SITE_URL}/registry/${entity.slug}`,
+        title: entity.legalName,
+      },
     };
   } catch {
     return { title: "Entity" };
@@ -98,7 +104,7 @@ export default async function EntityProfilePage({
     "@type": "Organization",
     name: entity.legalName,
     identifier: entity.slug,
-    url: `https://kiungo.example/registry/${entity.slug}`,
+    url: `${SITE_URL}/registry/${entity.slug}`,
     areaServed: [{ "@type": "AdministrativeArea", name: `${countyName(entity.countyCode)} County` }],
     address: {
       "@type": "PostalAddress",

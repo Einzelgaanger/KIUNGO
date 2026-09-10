@@ -61,3 +61,4 @@ Logged as the build proceeds. The specification is the source of truth; this fil
 - Swahili remains a production requirement; the MVP is English-only as specified.
 - Four-state handling on server pages uses App Router `loading.tsx` (skeleton) and `error.tsx` (retry), plus designed empty states when a query returns no rows.
 - Edge-check pass/fail uses `<CheckChip>`, not `<StatusBadge>`, because those are check results rather than claim or verification statuses.
+- Live demo origin is `https://kiungo.onrender.com` (`NEXT_PUBLIC_SITE_URL`). Render may inject a non-SQLite `DATABASE_URL`; `scripts/with-sqlite.mjs` forces `file:./dev.db` so migrate/seed/build stay on SQLite.

@@ -1,3 +1,5 @@
+import { SITE_URL } from "@/lib/site";
+
 export function GET() {
   const body = `# Kiungo — Sector Operating Infrastructure for Kenya
 
@@ -21,7 +23,7 @@ Docs: /how-it-works#api
 Contact details, contract values and claim values are private to the parties.
 
 ## Citation
-Cite as: Kiungo Registry, 9 September 2026. https://kiungo.example
+Cite as: Kiungo Registry, 9 September 2026. ${SITE_URL}
 `;
   return new Response(body, {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
