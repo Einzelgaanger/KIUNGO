@@ -41,7 +41,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# sqlite
-prisma/dev.db
+# sqlite journals only — commit the seeded demo db so Render starts with data
 prisma/dev.db-journal
-prisma/*.db

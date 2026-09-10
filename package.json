@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "node scripts/with-sqlite.mjs npx prisma generate && node scripts/with-sqlite.mjs npx prisma migrate deploy && node scripts/with-sqlite.mjs npx prisma db seed && node scripts/with-sqlite.mjs npx next build --turbopack",
-    "start": "next start",
+    "start": "node scripts/start.mjs",
     "lint": "eslint",
     "test": "tsx --test src/lib/*.test.ts",
     "db:seed": "tsx prisma/seed.ts",

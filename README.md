@@ -53,7 +53,7 @@ Closing line: housing is vertical one; the layer underneath is sector-agnostic.
 ## Render
 
 - **Build:** `npx pnpm@9.15.9 install && npm run build`
-- **Start:** `npm start`
+- **Start:** `npm start` (forces SQLite and seeds if the file is missing)
 - **Env:** `DATABASE_URL=file:./dev.db` and `NEXT_PUBLIC_SITE_URL=https://kiungo.onrender.com`
 
 ## Personas
