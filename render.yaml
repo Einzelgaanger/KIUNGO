@@ -9,6 +9,6 @@ services:
       - key: DATABASE_URL
         value: file:./dev.db
       - key: NEXT_PUBLIC_SITE_URL
-        value: https://kiungo.onrender.com
+        value: https://kiungo.jabali.studio
       - key: NODE_VERSION
         value: "20"

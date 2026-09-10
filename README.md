@@ -14,7 +14,7 @@ npx prisma db seed
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Live demo: [https://kiungo.onrender.com](https://kiungo.onrender.com).
+Open [http://localhost:3000](http://localhost:3000). Live demo: [https://kiungo.jabali.studio](https://kiungo.jabali.studio).
 
 `npm install` hung on the original Windows host; `pnpm` is the reliable installer. `npm run build` still works.
 
@@ -54,7 +54,7 @@ Closing line: housing is vertical one; the layer underneath is sector-agnostic.
 
 - **Build:** `npx pnpm@9.15.9 install && npm run build`
 - **Start:** `npm start` (forces SQLite and seeds if the file is missing)
-- **Env:** `DATABASE_URL=file:./dev.db` and `NEXT_PUBLIC_SITE_URL=https://kiungo.onrender.com`
+- **Env:** `DATABASE_URL=file:./dev.db` and `NEXT_PUBLIC_SITE_URL=https://kiungo.jabali.studio`
 
 ## Personas
 
