@@ -31,6 +31,7 @@ const plex = IBM_Plex_Mono({
 const SOCIAL_TITLE = "Kiungo — Verified delivery for Kenya housing";
 const SOCIAL_DESCRIPTION =
   "Who supplied what, with GPS and photo evidence. Settlement follows the work — not a form.";
+const OG_IMAGE = `${SITE_URL}/og.jpg`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -45,16 +46,17 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     siteName: "Kiungo",
-    locale: "en_KE",
+    locale: "en_GB",
     title: SOCIAL_TITLE,
     description: SOCIAL_DESCRIPTION,
     images: [
       {
-        url: "/opengraph-image",
+        url: OG_IMAGE,
+        secureUrl: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Kiungo — verified delivery for Kenya housing and construction",
-        type: "image/png",
+        type: "image/jpeg",
       },
     ],
   },
@@ -62,7 +64,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SOCIAL_TITLE,
     description: SOCIAL_DESCRIPTION,
-    images: ["/twitter-image"],
+    images: [OG_IMAGE],
   },
   icons: {
     icon: "/icon",
