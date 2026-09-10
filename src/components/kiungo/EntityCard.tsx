@@ -1,5 +1,5 @@
 import type { Certification, Entity } from "@prisma/client";
-import Link from "next/link";
+import { InstantLink } from "@/components/kiungo/InstantLink";
 import { ReliabilityScore } from "@/components/kiungo/ReliabilityScore";
 import { StatusBadge } from "@/components/kiungo/StatusBadge";
 import { VerificationBadge } from "@/components/kiungo/VerificationBadge";
@@ -28,7 +28,7 @@ export function EntityCard({
 
   if (variant === "compact") {
     return (
-      <Link href={href} className="flex min-h-11 items-center gap-3 rounded-md px-1 py-1 hover:bg-forest-50">
+      <InstantLink href={href} className="flex min-h-11 items-center gap-3 rounded-md px-1 py-1 hover:bg-forest-50">
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-forest-100 font-display text-xs font-medium text-forest-900">
           {initials(entity.legalName)}
         </span>
@@ -36,7 +36,7 @@ export function EntityCard({
           <span className="block truncate text-sm font-medium text-ink-900">{entity.legalName}</span>
           <span className="block text-xs text-ink-400">{countyName(entity.countyCode)}</span>
         </span>
-      </Link>
+      </InstantLink>
     );
   }
 
@@ -47,7 +47,7 @@ export function EntityCard({
         variant === "row" && "flex items-center gap-4 p-4 md:p-5",
       )}
     >
-      <Link href={href} className={cn("flex items-start gap-3", variant === "row" && "flex-1")}>
+      <InstantLink href={href} className={cn("flex items-start gap-3", variant === "row" && "flex-1")}>
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-100 font-display text-sm font-medium text-forest-900">
           {initials(entity.legalName)}
         </span>
@@ -69,7 +69,7 @@ export function EntityCard({
             </div>
           ) : null}
         </div>
-      </Link>
+      </InstantLink>
       <div className={cn("mt-4 flex flex-wrap items-center gap-2", variant === "row" && "mt-0")}>
         {cert ? (
           <Popover>

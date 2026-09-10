@@ -1,7 +1,9 @@
-import Link from "next/link";
-import { Logo } from "@/components/kiungo/Logo";
-import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/kiungo/BrandMark";
+import { PendingLink } from "@/components/kiungo/PendingLink";
+import { PrefetchRoutes } from "@/components/kiungo/PrefetchRoutes";
+import { BRAND } from "@/lib/brand";
 import { COPY } from "@/lib/constants";
+import Link from "next/link";
 
 export default function MarketingLayout({
   children,
@@ -9,42 +11,44 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-svh bg-forest-950 text-white">
-      <header className="sticky top-0 z-30 border-b border-forest-800 bg-forest-950/95">
-        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-3 px-4 py-3 md:px-8">
-          <Logo tone="dark" />
-          <nav className="flex items-center gap-1 sm:gap-2">
-            <Button asChild variant="link" className="text-forest-100 min-h-11">
-              <Link href="/how-it-works">How it works</Link>
-            </Button>
-            <Button asChild variant="darkGhost" size="sm" className="hidden sm:inline-flex">
-              <Link href="/whatsapp">WhatsApp demo</Link>
-            </Button>
-            <Button asChild variant="accent" size="sm">
-              <Link href="/registry">Live registry</Link>
-            </Button>
-          </nav>
-        </div>
-      </header>
-      <main>{children}</main>
-      <footer className="border-t border-forest-800 bg-forest-950">
-        <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-4 px-4 py-8 md:flex-row md:items-center md:justify-between md:px-8">
-          <Logo tone="dark" />
-          <div className="flex flex-wrap gap-4 text-sm text-forest-100">
-            <Link href="/how-it-works" className="hover:text-white">
-              How it works
-            </Link>
-            <Link href="/registry" className="hover:text-white">
-              Registry
-            </Link>
-            <Link href="/whatsapp" className="hover:text-white">
-              WhatsApp demo
-            </Link>
-            <Link href="/build" className="hover:text-white">
-              I want to build
-            </Link>
+    <div className="kiungo-site min-h-dvh">
+      <PrefetchRoutes hrefs={["/whatsapp", "/registry", "/how-it-works"]} />
+      {children}
+      <footer className="site-footer">
+        <div className="container site-footer__grid">
+          <div>
+            <div className="mb-4 inline-flex items-center gap-3">
+              <BrandMark size={40} />
+              <span className="font-display text-[22px] font-bold tracking-[-0.03em] text-white">
+                {BRAND.name}
+              </span>
+            </div>
+            <p className="max-w-xs text-sm text-white/70">{BRAND.promise}</p>
           </div>
-          <p className="text-xs text-forest-100/70">{COPY.landing.footerNote}</p>
+          <div>
+            <h4>Product</h4>
+            <Link href="/how-it-works">How it works</Link>
+            <Link href="/registry">Registry</Link>
+            <PendingLink href="/whatsapp" pendingLabel="Opening…">
+              WhatsApp demo
+            </PendingLink>
+          </div>
+          <div>
+            <h4>Portals</h4>
+            <Link href="/console">Console</Link>
+            <Link href="/review">Review</Link>
+            <Link href="/finance">Finance</Link>
+            <Link href="/intelligence">Intelligence</Link>
+          </div>
+          <div>
+            <h4>Citizen</h4>
+            <Link href="/build">I want to build</Link>
+            <Link href="/api/public/entities">Public API</Link>
+          </div>
+        </div>
+        <div className="container mt-10 flex flex-col gap-3 border-t border-white/12 pt-6 text-xs text-white/55 sm:flex-row sm:justify-between">
+          <p>{COPY.landing.footerNote}</p>
+          <p>Housing is vertical one. The layer underneath is sector-agnostic.</p>
         </div>
       </footer>
     </div>

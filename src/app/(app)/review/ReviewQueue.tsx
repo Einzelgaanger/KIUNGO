@@ -8,19 +8,34 @@ import { EvidenceViewer } from "@/components/kiungo/EvidenceViewer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import type { Claim, ContractLine, EdgeCheck, Entity, Evidence, Site } from "@prisma/client";
+import type { VerificationStatus } from "@prisma/client";
 import { DEMO_NOW_ISO } from "@/lib/constants";
 import { formatRelative } from "@/lib/format";
 
-type QueueItem = Claim & {
-  entity: Entity;
-  contractLine: ContractLine;
-  site: Site;
-  evidence: Evidence[];
-  edgeChecks: EdgeCheck[];
+export type ReviewQueueItem = {
+  id: string;
+  ref: string;
+  quantity: number;
+  submittedAt: Date;
+  submittedLat: number;
+  submittedLng: number;
+  driftMeters: number | null;
+  entity: { legalName: string; verification: VerificationStatus };
+  contractLine: { itemName: string; unit: string };
+  site: { id: string; name: string };
+  evidence: {
+    id: string;
+    url: string;
+    capturedAt: Date | null;
+    exifLat: number | null;
+    exifLng: number | null;
+    sha256: string;
+    deviceHint: string | null;
+  }[];
+  edgeChecks: { id: string; check: string; passed: boolean }[];
 };
 
-export function ReviewQueue({ items }: { items: QueueItem[] }) {
+export function ReviewQueue({ items }: { items: ReviewQueueItem[] }) {
   const router = useRouter();
   const [siteFilter, setSiteFilter] = useState("all");
   const [ageFilter, setAgeFilter] = useState("all");
@@ -48,7 +63,7 @@ export function ReviewQueue({ items }: { items: QueueItem[] }) {
   const active = filtered.find((item) => item.id === activeId) ?? filtered[0];
 
   const grouped = useMemo(() => {
-    const map = new Map<string, QueueItem[]>();
+    const map = new Map<string, ReviewQueueItem[]>();
     for (const item of filtered) {
       const list = map.get(item.site.name) ?? [];
       list.push(item);

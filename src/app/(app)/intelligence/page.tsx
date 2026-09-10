@@ -314,11 +314,16 @@ async function loadClaims(since: Date, county: string, site: string) {
       ...(county !== "all" ? { site: { countyCode: county } } : {}),
       ...(site !== "all" ? { siteId: site } : {}),
     },
-    include: {
-      valueOutcome: true,
-      site: true,
-      contractLine: true,
-      reviews: true,
+    select: {
+      id: true,
+      entityId: true,
+      status: true,
+      quantity: true,
+      submittedAt: true,
+      site: { select: { countyCode: true } },
+      contractLine: { select: { itemName: true } },
+      valueOutcome: { select: { supplierShare: true } },
+      reviews: { select: { decision: true, decidedAt: true } },
     },
   });
   return claims.map((claim) => {

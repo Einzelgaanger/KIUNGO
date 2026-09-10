@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { EdgeCheck, Evidence } from "@prisma/client";
 import { CheckChip } from "@/components/kiungo/CheckChip";
 import { formatDateTimeAbsolute, formatHashPrefix, formatLatLng } from "@/lib/format";
 
@@ -13,8 +12,16 @@ export function EvidenceViewer({
   deviceLng,
   driftMeters,
 }: {
-  evidence: Evidence[];
-  checks: EdgeCheck[];
+  evidence: {
+    id: string;
+    url: string;
+    capturedAt: Date | null;
+    exifLat: number | null;
+    exifLng: number | null;
+    sha256: string;
+    deviceHint: string | null;
+  }[];
+  checks: { id: string; check: string; passed: boolean }[];
   claimRef: string;
   deviceLat?: number;
   deviceLng?: number;

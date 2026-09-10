@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MoreHorizontal, Plus, Search, LayoutDashboard, ClipboardCheck, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { InstantLink } from "@/components/kiungo/InstantLink";
 import { RoleSwitcher } from "@/components/kiungo/RoleSwitcher";
 import { isNavVisible, NAV_GROUPS } from "@/components/kiungo/nav";
 import { COPY, countyName } from "@/lib/constants";
@@ -38,7 +38,7 @@ export function MobileTabBar({ session }: { session: Session }) {
 
   return (
     <>
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] md:hidden">
+      <nav className="glass-tabbar safe-pad-bottom fixed inset-x-0 bottom-0 z-40 lg:hidden">
         <ul className="grid grid-cols-5 items-end">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -49,28 +49,35 @@ export function MobileTabBar({ session }: { session: Session }) {
             if ("fab" in tab && tab.fab) {
               return (
                 <li key={tab.href} className="flex justify-center">
-                  <Link
+                  <InstantLink
                     href={tab.href}
                     aria-label={tab.label}
-                    className="-mt-5 flex h-14 w-14 items-center justify-center rounded-full bg-lime-500 text-forest-900 shadow-md"
+                    className="-mt-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#D3F36B] text-[#0E1F1A] active:scale-95"
                   >
-                    <Icon className="h-6 w-6" />
-                  </Link>
+                    <Icon className="h-6 w-6" strokeWidth={1.75} />
+                  </InstantLink>
                 </li>
               );
             }
             return (
               <li key={tab.href}>
-                <Link
+                <InstantLink
                   href={tab.href}
                   className={cn(
-                    "flex min-h-14 flex-col items-center justify-center gap-1 text-[11px]",
-                    active ? "text-forest-900" : "text-ink-400",
+                    "flex min-h-[52px] flex-col items-center justify-center gap-1 text-[10px] font-medium",
+                    active ? "text-[#0E1F1A]" : "text-[#5A6B7D]",
                   )}
                 >
-                  <Icon className="h-5 w-5" />
+                  <span
+                    className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-md",
+                      active && "bg-[#D3F36B]/25",
+                    )}
+                  >
+                    <Icon className="h-5 w-5" strokeWidth={1.75} />
+                  </span>
                   {tab.label}
-                </Link>
+                </InstantLink>
               </li>
             );
           })}
@@ -78,7 +85,7 @@ export function MobileTabBar({ session }: { session: Session }) {
             <button
               type="button"
               onClick={() => setMoreOpen(true)}
-              className="flex min-h-14 w-full flex-col items-center justify-center gap-1 text-[11px] text-ink-400"
+              className="flex min-h-[52px] w-full flex-col items-center justify-center gap-1 text-[10px] font-medium text-[#5A6B7D]"
             >
               <MoreHorizontal className="h-5 w-5" />
               More
@@ -88,51 +95,52 @@ export function MobileTabBar({ session }: { session: Session }) {
       </nav>
 
       <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
-        <SheetContent side="bottom" className="rounded-t-xl">
+        <SheetContent side="left" className="w-[min(20rem,88vw)] border-0 bg-[#0E1F1A] text-white">
           <SheetHeader>
-            <SheetTitle>More</SheetTitle>
-            <SheetDescription>
+            <SheetTitle className="text-white">More</SheetTitle>
+            <SheetDescription className="text-white/60">
               {session.name} · {countyName(session.countyCode)}
             </SheetDescription>
           </SheetHeader>
-          <div className="grid gap-2 py-4">
+          <div className="grid gap-1 py-4">
             {moreItems.map((item) => {
               const Icon = item.icon;
               return (
-                <Link
+                <InstantLink
                   key={item.href}
                   href={item.href}
                   onClick={() => setMoreOpen(false)}
-                  className="flex min-h-11 items-center gap-3 rounded-md px-2 text-sm hover:bg-forest-50"
+                  className="sidebar-nav-link"
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
                   {item.label}
-                </Link>
+                </InstantLink>
               );
             })}
-            <Link
+            <InstantLink
               href="/whatsapp"
               onClick={() => setMoreOpen(false)}
-              className="flex min-h-11 items-center gap-3 rounded-md px-2 text-sm text-forest-900 hover:bg-forest-50"
+              className="sidebar-nav-link"
+              pendingLabel="Opening WhatsApp…"
             >
-              Open WhatsApp demo
-            </Link>
-            <Link
+              WhatsApp demo
+            </InstantLink>
+            <InstantLink
               href="/build"
               onClick={() => setMoreOpen(false)}
-              className="flex min-h-11 items-center gap-3 rounded-md px-2 text-sm hover:bg-forest-50"
+              className="sidebar-nav-link"
             >
               I want to build a house
-            </Link>
+            </InstantLink>
           </div>
           <RoleSwitcher
             currentUserId={session.userId}
             currentName={session.name}
             currentRole={session.role}
             currentEntity={session.entityName}
-            tone="light"
+            tone="dark"
           />
-          <p className="mt-3 text-xs text-ink-400">{COPY.landing.footerNote}</p>
+          <p className="mt-3 text-[11px] text-white/50">{COPY.landing.footerNote}</p>
         </SheetContent>
       </Sheet>
     </>

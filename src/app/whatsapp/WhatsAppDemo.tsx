@@ -205,22 +205,22 @@ export function WhatsAppDemo({
           backgroundSize: "48px 48px",
         }}
       />
-      <div className="relative mx-auto flex min-h-svh w-full max-w-[1400px] flex-col items-center gap-8 px-4 py-8 lg:flex-row lg:items-start lg:justify-center">
-        <div className="w-full max-w-[375px]">
+      <div className="relative mx-auto flex min-h-svh w-full max-w-[1100px] flex-col items-center gap-6 px-4 py-8 lg:flex-row lg:items-center lg:justify-center">
+        <div className="w-full max-w-[280px]">
           <div
-            className="overflow-hidden rounded-[44px] border-8 border-forest-950 bg-paper text-ink-900 shadow-lg"
-            style={{ height: 812 }}
+            className="overflow-hidden rounded-[28px] border-[6px] border-forest-950 bg-paper text-ink-900 shadow-lg"
+            style={{ height: 560 }}
           >
-            <div className="flex h-14 items-center gap-3 rounded-t-[36px] bg-forest-900 px-4 text-white">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-500 font-display text-xs font-bold text-forest-900">
+            <div className="flex h-10 items-center gap-2 rounded-t-[22px] bg-forest-900 px-2.5 text-white">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-500 font-display text-[10px] font-bold text-forest-900">
                 K
               </span>
               <div>
-                <p className="text-sm font-medium">Kiungo</p>
-                <p className="text-[11px] text-forest-100/70">housing.delivery.v1</p>
+                <p className="text-[11px] font-medium leading-tight">Kiungo</p>
+                <p className="text-[8px] leading-tight text-forest-100/70">housing.delivery.v1</p>
               </div>
             </div>
-            <div className="flex h-[calc(812px-56px)] flex-col gap-2 overflow-y-auto bg-paper p-3">
+            <div className="flex h-[calc(560px-40px)] flex-col gap-1.5 overflow-y-auto bg-paper p-2">
               {shown.map((msg) => (
                 <Bubble key={msg.id} msg={msg} checks={checks} />
               ))}
@@ -232,19 +232,19 @@ export function WhatsAppDemo({
               ) : null}
               {approvedCopy ? <Bubble msg={{ id: "ok", dir: "in", text: approvedCopy }} checks={4} /> : null}
               {typing ? (
-                <div className="flex w-16 gap-1 rounded-lg rounded-tl-sm bg-surface px-3 py-2 shadow-xs">
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-400" />
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-400 [animation-delay:120ms]" />
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-400 [animation-delay:240ms]" />
+                <div className="flex w-12 gap-1 rounded-md rounded-tl-sm bg-surface px-2 py-1.5 shadow-xs">
+                  <span className="h-1 w-1 animate-bounce rounded-full bg-ink-400" />
+                  <span className="h-1 w-1 animate-bounce rounded-full bg-ink-400 [animation-delay:120ms]" />
+                  <span className="h-1 w-1 animate-bounce rounded-full bg-ink-400 [animation-delay:240ms]" />
                 </div>
               ) : null}
               <div ref={endRef} />
             </div>
           </div>
-          <p className="mt-3 text-center text-xs text-forest-100/70">
+          <p className="mt-2.5 text-center text-[11px] text-forest-100/70">
             Simulated. Production uses WhatsApp Business API with the same flow definition.
           </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
+          <div className="mt-3 flex flex-wrap justify-center gap-2">
             <Button
               variant="accent"
               onClick={() => {
@@ -270,8 +270,8 @@ export function WhatsAppDemo({
           </div>
         </div>
 
-        <aside className="hidden w-full max-w-lg rounded-lg border border-forest-700 bg-forest-900 p-4 font-mono text-xs text-forest-100 lg:block">
-          <p className="mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-lime-500">
+        <aside className="hidden w-full max-w-md rounded-lg border border-forest-700 bg-forest-900 p-3 font-mono text-[11px] leading-relaxed text-forest-100 lg:block">
+          <p className="mb-2 font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-lime-500">
             System view
           </p>
           {LOG.slice(0, logs).map((line) => (
@@ -298,17 +298,17 @@ function Bubble({ msg, checks }: { msg: Msg; checks: number }) {
         <img
           src="/mock/delivery-07.jpg"
           alt="Delivery evidence for WhatsApp demo"
-          className="h-32 w-full rounded-md object-cover"
+          className="h-24 w-full rounded-md object-cover"
         />
-        <p className="px-2 py-1 text-[10px] text-ink-400">11:04 ✓✓</p>
+        <p className="px-1.5 py-0.5 text-[8px] text-ink-400">11:04 ✓✓</p>
       </div>
     );
   }
   if (msg.kind === "location") {
     return (
-      <div className={`max-w-[80%] p-2 ${base}`}>
-        <p className="text-sm">Mukuru Phase 2 · −1.3089, 36.8726</p>
-        <p className="text-[10px] text-ink-400">11:04 ✓✓</p>
+      <div className={`max-w-[80%] p-1.5 ${base}`}>
+        <p className="text-[11px]">Mukuru Phase 2 · −1.3089, 36.8726</p>
+        <p className="text-[8px] text-ink-400">11:04 ✓✓</p>
       </div>
     );
   }
@@ -320,9 +320,9 @@ function Bubble({ msg, checks }: { msg: Msg; checks: number }) {
       "Quantity within contract balance",
     ];
     return (
-      <div className={`max-w-[85%] p-3 ${base}`}>
-        <p className="text-sm">⏳ Checking...</p>
-        <ul className="mt-2 space-y-1 text-sm">
+      <div className={`max-w-[85%] p-2 ${base}`}>
+        <p className="text-[11px]">⏳ Checking...</p>
+        <ul className="mt-1.5 space-y-0.5 text-[11px]">
           {items.slice(0, checks).map((item) => (
             <li key={item} className="text-lime-700">
               ✓ {item}
@@ -333,9 +333,9 @@ function Bubble({ msg, checks }: { msg: Msg; checks: number }) {
     );
   }
   return (
-    <div className={`max-w-[85%] whitespace-pre-wrap p-3 text-sm ${base}`}>
+    <div className={`max-w-[85%] whitespace-pre-wrap p-2 text-[11px] leading-snug ${base}`}>
       {msg.text}
-      <p className="mt-1 text-[10px] text-ink-400">11:04 {msg.dir === "out" ? "✓✓" : ""}</p>
+      <p className="mt-0.5 text-[8px] text-ink-400">11:04 {msg.dir === "out" ? "✓✓" : ""}</p>
     </div>
   );
 }

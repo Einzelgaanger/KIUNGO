@@ -84,10 +84,9 @@ export async function searchEntities(query: RegistryQuery) {
 
   const [verified, counties, claims] = await Promise.all([
     prisma.entity.count({ where: { ...where, verification: "VERIFIED" } }),
-    prisma.entity.findMany({
+    prisma.entity.groupBy({
+      by: ["countyCode"],
       where,
-      select: { countyCode: true },
-      distinct: ["countyCode"],
     }),
     prisma.claim.count({
       where: query.county && query.county.length > 0

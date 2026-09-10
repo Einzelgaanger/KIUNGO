@@ -2,13 +2,21 @@
 
 Logged as the build proceeds. The specification is the source of truth; this file records only genuine gaps.
 
+## IOUX visual port (Sep 2026)
+
+- Kiungo keeps its product copy, IA and housing domain. The IOUX transfer guide supplies chrome only: forest/lime/gold, Plus Jakarta + Space Grotesk + Inter + IBM Plex Mono, portal density, marketing hero shade stack.
+- Mark is a forest tile + interlocking link + lime node (`BrandMark`). It is not the IOUX U path.
+- Photography is construction / housing / workshop (Unsplash), not clinical or warehouse-logistics leftovers from IOUX.
+- Portal CSS lives in `src/app/portal.css`; marketing in `src/app/marketing.css` under `.kiungo-site`.
+- `SectionHeading` `as="h1"` now renders the forest `PageHeader` + 4×16 lime tick.
+
 ## Phase 1
 
 - The Next.js app lives at the workspace root (`Kiungo`) rather than a nested `kiungo/` folder, because the workspace was already named for the product. The npm package name is `kiungo` (lowercase) to satisfy npm naming rules.
 - shadcn primitives were authored against the token system instead of being generated and then restyled. The same Radix primitives and public APIs as `npx shadcn@latest add …` are used.
 - Toasts use `sonner` (current shadcn default for the App Router) restyled to the tokens. The spec lists `toast`; the user-facing API is `toast()` from `sonner`.
 - Zod 3 is used rather than Zod 4 so `@hookform/resolvers` stays on a stable path.
-- Route protection reads `x-pathname` set by `src/middleware.ts`. Next.js layouts do not receive the URL otherwise.
+- Route protection is a client `AuthGate` using `usePathname()`. A middleware `x-pathname` header was removed so the portal layout is not invalidated on every tab click.
 - Role-switcher personas use stable ids (`user-amina`, …) that Phase 2 seed must reuse.
 - Swahili is a production requirement. The MVP is English-only as specified.
 - `.env` is gitignored by the Next.js template. `.env.example` documents `DATABASE_URL="file:./dev.db"`.
@@ -42,7 +50,9 @@ Logged as the build proceeds. The specification is the source of truth; this fil
 ## Phase 7
 
 - Citizen estimate bands use m²-per-bedroom × finish rate so a 3-bed standard Nairobi house lands in KSh 3.4m–4.6m.
-- Open Graph images for entity profiles live at `(app)/registry/[slug]/opengraph-image.tsx` so they share the `/registry/[slug]` route. `ImageResponse` cannot resolve CSS variables, so forest/lime hex values are inlined there only.
+- Open Graph images for entity profiles live at `(app)/registry/[slug]/opengraph-image.tsx` so they share the `/registry/[slug]` route. `ImageResponse` cannot resolve CSS variables, so forest/lime hex values are inlined there only. The same exception applies to `src/app/icon.tsx` and `src/app/apple-icon.tsx`.
+- The Next.js Dev Tools "N" is hidden with `devIndicators: false`. It is a development overlay, not a product control.
+- Next 15 defaults the dynamic client router cache to 0s. `experimental.staleTimes.dynamic` is 300s so sidebar tab switches reuse the last RSC payload. Mutations already call `revalidatePath` / `router.refresh()`.
 
 ## Phase 8
 

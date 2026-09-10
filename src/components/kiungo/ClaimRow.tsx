@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { InstantLink } from "@/components/kiungo/InstantLink";
 import type { Claim, Contract, ContractLine, Site, ValueOutcome } from "@prisma/client";
 import { StatusBadge } from "@/components/kiungo/StatusBadge";
 import { formatDatePair, formatKes, formatQuantity } from "@/lib/format";
@@ -21,7 +21,7 @@ export function ClaimRow({
   showValue?: boolean;
 }) {
   return (
-    <Link
+    <InstantLink
       href={href}
       className="hidden min-h-14 items-center gap-4 border-b border-line-soft px-3 py-3 text-sm hover:bg-forest-50 md:flex"
     >
@@ -38,7 +38,7 @@ export function ClaimRow({
           {claim.valueOutcome ? formatKes(claim.valueOutcome.grossAmount) : "—"}
         </span>
       ) : null}
-    </Link>
+    </InstantLink>
   );
 }
 
@@ -52,7 +52,7 @@ export function ClaimCard({
   showValue?: boolean;
 }) {
   return (
-    <Link
+    <InstantLink
       href={href}
       className={cn(
         "block rounded-lg border border-line bg-surface p-4 shadow-xs md:hidden",
@@ -70,6 +70,6 @@ export function ClaimCard({
       {showValue && claim.valueOutcome ? (
         <p className="mt-2 text-sm tabular-nums">{formatKes(claim.valueOutcome.grossAmount)}</p>
       ) : null}
-    </Link>
+    </InstantLink>
   );
 }

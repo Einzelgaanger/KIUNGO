@@ -1,177 +1,205 @@
 import Link from "next/link";
-import { Building2, Landmark, ShieldCheck, Users } from "lucide-react";
-import { EntityCard } from "@/components/kiungo/EntityCard";
-import { TrustRail } from "@/components/kiungo/TrustRail";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { PendingLink } from "@/components/kiungo/PendingLink";
+import { SiteNav } from "@/components/marketing/SiteNav";
+import { Reveal } from "@/components/marketing/Reveal";
+import { BRAND, PHOTOS } from "@/lib/brand";
 import { COPY } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 
-const LOOP = ["Submit", "Verify", "Route", "Review", "Compute", "Settle"];
-const VERTICALS = ["Housing", "Tourism", "Agriculture", "Health", "Education"];
+const LOOP = [
+  { t: "Submit", d: "Quantity, photo and a GPS pin — WhatsApp or web." },
+  { t: "Verify", d: "EXIF, timestamp, hash and contract balance." },
+  { t: "Route", d: "Geo-resolution to the reviewer for that site." },
+  { t: "Review", d: "Approve, query or reject. Hard fails block batch." },
+  { t: "Compute", d: "Quality multiplier. Split 80 / 10 / 10." },
+  { t: "Settle", d: "Instruction recorded. Reliability recomputed." },
+];
+
+const RIBBONS = [
+  {
+    t: "Discover",
+    d: "A verified registry, not a directory.",
+    href: "/registry",
+    img: PHOTOS.ribbonYard,
+    index: "01",
+  },
+  {
+    t: "Deliver",
+    d: "Evidence at the point of action.",
+    href: "/whatsapp",
+    img: PHOTOS.hero,
+    index: "02",
+  },
+  {
+    t: "Finance",
+    d: "Credit priced off work, not a form.",
+    href: "/finance",
+    img: PHOTOS.ribbonEstate,
+    index: "03",
+  },
+];
 
 export default async function LandingPage() {
   let entities = 180;
   let claims = 900;
   let counties = 8;
-  let featured: Awaited<ReturnType<typeof prisma.entity.findMany>> = [];
   try {
-    const [e, v, c, f] = await Promise.all([
+    const [e, v, c] = await Promise.all([
       prisma.entity.count({ where: { verification: "VERIFIED" } }),
       prisma.claim.count(),
       prisma.entity.findMany({ select: { countyCode: true }, distinct: ["countyCode"] }),
-      prisma.entity.findMany({
-        where: { category: "FABRICATOR", verification: "VERIFIED" },
-        include: { certifications: true, _count: { select: { claims: true } } },
-        take: 3,
-        orderBy: { reliability: "desc" },
-      }),
     ]);
     entities = e;
     claims = v;
     counties = c.length;
-    featured = f;
   } catch {
     /* static fallbacks */
   }
 
   return (
-    <div>
-      <section className="relative overflow-hidden bg-forest-950">
+    <>
+      <SiteNav overlay />
+      <section className="mk-hero">
         <div
+          className="mk-hero__media"
+          style={{ backgroundImage: `url('${PHOTOS.hero}')` }}
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-40"
-          style={{
-            backgroundImage:
-              "linear-gradient(var(--color-forest-800) 1px, transparent 1px), linear-gradient(90deg, var(--color-forest-800) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
         />
-        <div aria-hidden className="pointer-events-none absolute -top-24 right-0 h-80 w-80 rounded-full bg-lime-500/8 blur-3xl" />
-        <div className="relative mx-auto w-full max-w-[1400px] px-4 py-16 md:px-8 md:py-24">
-          <div className="h-[3px] w-9 rounded-full bg-lime-500" />
-          <p className="mt-4 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-forest-100/70">
-            {COPY.landing.eyebrow}
-          </p>
-          <h1 className="mt-4 max-w-4xl font-display text-5xl font-bold leading-[0.95] tracking-[-0.03em] md:text-7xl">
-            {COPY.landing.headline}
-          </h1>
-          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-forest-100 md:text-base">{COPY.landing.sub}</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button asChild variant="accent" size="lg">
-              <Link href="/registry">{COPY.landing.ctaRegistry}</Link>
-            </Button>
-            <Button asChild variant="darkGhost" size="lg">
-              <Link href="/whatsapp">{COPY.landing.ctaWhatsapp}</Link>
-            </Button>
+        <div className="mk-hero__shade" aria-hidden />
+        <div className="mk-hero__grain" aria-hidden />
+        <div className="container mk-hero__inner">
+          <p className="mk-brand">{BRAND.name}</p>
+          <div className="mk-hero__rule" />
+          <h1>{COPY.landing.headline}</h1>
+          <p className="mk-hero__sub">{COPY.landing.sub}</p>
+          <div className="jump">
+            <Link href="/registry" className="btn btn-lime">
+              {COPY.landing.ctaRegistry}
+              <span className="node">
+                <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+            <PendingLink href="/whatsapp" className="btn btn-ghost-light" pendingLabel="Opening…">
+              {COPY.landing.ctaWhatsapp}
+            </PendingLink>
           </div>
-          <TrustRail entities={entities} claims={claims} counties={counties} />
         </div>
       </section>
 
-      <section className="bg-forest-900 py-16">
-        <div className="mx-auto grid w-full max-w-[1400px] gap-4 px-4 md:grid-cols-3 md:px-8">
-          {[
-            { icon: Users, title: "A citizen who wants to build.", body: COPY.landing.problemCitizen, n: "2m" },
-            { icon: Building2, title: "An enterprise that wants to supply.", body: COPY.landing.problemEnterprise, n: "30,016" },
-            { icon: Landmark, title: "A state that cannot see.", body: COPY.landing.problemState, n: "271,000" },
-          ].map((card) => (
-            <div key={card.title} className="rounded-lg border border-forest-700 bg-forest-800 p-6">
-              <card.icon className="h-5 w-5 text-lime-500" />
-              <h2 className="mt-4 font-display text-lg font-semibold">{card.title}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-forest-100">{card.body}</p>
-              <p className="mt-4 font-display text-3xl font-bold tabular-nums text-lime-500">{card.n}</p>
-            </div>
-          ))}
+      <section className="mk-problem scroll-margin-nav">
+        <span className="mk-problem__big" aria-hidden>
+          {BRAND.name}
+        </span>
+        <div className="container mk-problem__grid">
+          <Reveal>
+            <p className="label dark">The problem</p>
+            <h2 className="mt-4 font-display text-[clamp(28px,4vw,48px)] font-bold tracking-[-0.03em] text-[#0E1F1A]">
+              Three actors. One missing layer.
+            </h2>
+            <p className="mt-4 max-w-xl text-[15px] text-[#5A6B60]">{COPY.landing.problemCitizen}</p>
+          </Reveal>
+          <aside className="mk-problem__aside">
+            <Reveal delay={1}>
+              <p className="font-display text-lg font-bold text-[#0E1F1A]">Enterprise</p>
+              <p className="mt-2 text-sm text-[#5A6B60]">{COPY.landing.problemEnterprise}</p>
+            </Reveal>
+            <Reveal delay={2} className="mt-8 block">
+              <p className="font-display text-lg font-bold text-[#0E1F1A]">The state</p>
+              <p className="mt-2 text-sm text-[#5A6B60]">{COPY.landing.problemState}</p>
+            </Reveal>
+          </aside>
         </div>
       </section>
 
-      <section className="bg-forest-950 py-16">
-        <div className="mx-auto w-full max-w-[1400px] px-4 md:px-8">
-          <div className="h-[3px] w-9 rounded-full bg-lime-500" />
-          <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-forest-100/70">The loop</p>
-          <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-center">
+      <section className="mk-flow scroll-margin-nav" id="loop">
+        <div className="container relative z-[1]">
+          <Reveal>
+            <p className="label">The loop</p>
+            <h2 className="mt-3 font-display text-[clamp(28px,4vw,44px)] font-bold">
+              From delivery to settlement
+            </h2>
+          </Reveal>
+          <div className="mk-rail mt-12">
             {LOOP.map((step, i) => (
-              <div key={step} className="flex flex-1 items-center gap-3">
-                <div className="w-full rounded-lg bg-forest-800 p-4">
-                  <p className="font-display text-2xl font-bold text-lime-500">{i + 1}</p>
-                  <p className="mt-1 font-medium">{step}</p>
+              <Reveal key={step.t} delay={(Math.min(i, 4) || undefined) as 1 | 2 | 3 | 4 | undefined}>
+                <div className="mk-step">
+                  <div className="mk-step__disc">{i + 1}</div>
+                  <h3>{step.t}</h3>
+                  <p>{step.d}</p>
                 </div>
-                {i < LOOP.length - 1 ? <span className="hidden text-lime-500 md:block">→</span> : null}
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-forest-900 py-16">
-        <div className="mx-auto w-full max-w-[1400px] space-y-10 px-4 md:px-8">
-          {[
-            { t: "Discover", d: "A verified registry, not a directory.", href: "/registry", panel: "registry" },
-            { t: "Deliver", d: "Evidence at the point of action.", href: "/whatsapp", panel: "deliver" },
-            { t: "Finance", d: "Credit priced off work, not a form.", href: "/finance", panel: "finance" },
-            { t: "Opportunities", d: "Packages matched with reasons.", href: "/opportunities", panel: "opps" },
-            { t: "Intelligence", d: "A live instrument panel for the programme.", href: "/intelligence", panel: "intel" },
-          ].map((mod, i) => (
-            <div key={mod.t} className={`grid items-center gap-6 md:grid-cols-2 ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}>
-              <div>
-                <div className="h-[3px] w-9 rounded-full bg-lime-500" />
-                <h2 className="mt-3 font-display text-3xl font-bold">{mod.t}</h2>
-                <p className="mt-3 text-forest-100">{mod.d}</p>
-                <Button asChild variant="accent" className="mt-4">
-                  <Link href={mod.href}>Open {mod.t}</Link>
-                </Button>
-              </div>
-              <div className="rounded-lg border border-forest-700 bg-paper p-4 text-ink-900">
-                {mod.panel === "registry" && featured.length > 0 ? (
-                  <div className="space-y-3">
-                    {featured.map((entity) => (
-                      <EntityCard key={entity.id} entity={entity} variant="compact" />
-                    ))}
-                  </div>
-                ) : (
-                  <pre className="overflow-x-auto font-mono text-xs text-ink-600">
-                    {mod.panel === "deliver"
-                      ? "CLM-2026-004821  QUEUED\nMukuru Phase 2 · 84 m\nDR-STL-900 × 40"
-                      : mod.panel === "finance"
-                        ? "Reliability 78 · Verified\n3 of 9 products available"
-                        : mod.panel === "opps"
-                          ? "Steel door frames · Nairobi\nReserved: Youth · Women\nWhy: county + category + tag"
-                          : "Deliveries 16w  ·  900\nValue settled  ·  live\nNeeds attention  ·  queue"}
-                  </pre>
-                )}
-              </div>
+      {RIBBONS.map((mod, i) => (
+        <section key={mod.t} className={`mk-ribbon mk-ribbon--cut ${i % 2 ? "reverse" : ""}`}>
+          <div className="mk-ribbon__copy">
+            <Reveal>
+              <p className="mk-index">{mod.index}</p>
+              <h2 className="mt-3 font-display text-3xl font-bold text-[#0E1F1A]">{mod.t}</h2>
+              <p className="mt-3 max-w-md text-[#5A6B60]">{mod.d}</p>
+              <PendingLink href={mod.href} className="btn btn-dark mt-6" pendingLabel="Opening…">
+                Open {mod.t}
+                <span className="node">
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </PendingLink>
+            </Reveal>
+          </div>
+          <div className="mk-ribbon__media">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={mod.img} alt="" />
+          </div>
+        </section>
+      ))}
+
+      <div className="mk-slash" />
+
+      <section className="mk-statement">
+        <div className="container">
+          <Reveal>
+            <h2>
+              Housing is vertical one. The layer underneath is <span>sector-agnostic</span>.
+            </h2>
+          </Reveal>
+          <div className="mk-metrics">
+            <div>
+              <p className="text-[11px] font-semibold text-white/60">Verified entities</p>
+              <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{entities}</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="bg-forest-950 py-16">
-        <div className="mx-auto grid w-full max-w-[1400px] gap-4 px-4 md:grid-cols-2 md:px-8">
-          {["Verified certification", "Evidenced delivery", "Deterministic settlement", "Machine-readable registry"].map((claim) => (
-            <div key={claim} className="flex items-start gap-3 rounded-lg border border-forest-800 p-5">
-              <ShieldCheck className="h-5 w-5 text-lime-500" />
-              <p className="font-medium">{claim}</p>
+            <div>
+              <p className="text-[11px] font-semibold text-white/60">Evidenced deliveries</p>
+              <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{claims}</p>
             </div>
-          ))}
+            <div>
+              <p className="text-[11px] font-semibold text-white/60">Counties covered</p>
+              <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{counties}</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="bg-forest-900 py-12">
-        <div className="mx-auto flex w-full max-w-[1400px] flex-wrap gap-3 px-4 md:px-8">
-          {VERTICALS.map((v) => (
-            <span key={v} className="rounded-pill border border-forest-700 px-4 py-2 text-sm">
-              {v}
-            </span>
-          ))}
-          <p className="w-full text-sm text-forest-100/70">Housing is vertical one. The layer underneath is sector-agnostic.</p>
+      <section className="cta-band">
+        <div className="container relative z-[1]">
+          <p className="font-display max-w-[16ch] text-[clamp(28px,4vw,48px)] font-bold leading-tight text-[#0E1F1A]">
+            {COPY.landing.ctaBand}
+          </p>
+          <div className="jump mt-8">
+            <Link href="/registry" className="btn btn-dark">
+              See the live registry
+              <span className="node">
+                <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+            <Link href="/build" className="btn btn-ghost-dark border-[#0E1F1A] text-[#0E1F1A]">
+              I want to build
+            </Link>
+          </div>
         </div>
       </section>
-
-      <section className="bg-lime-500 py-16 text-forest-900">
-        <div className="mx-auto max-w-[1400px] px-4 md:px-8">
-          <p className="font-display text-3xl font-bold md:text-4xl">{COPY.landing.ctaBand}</p>
-        </div>
-      </section>
-    </div>
+    </>
   );
 }

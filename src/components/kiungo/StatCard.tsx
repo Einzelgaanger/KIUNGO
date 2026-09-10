@@ -69,34 +69,42 @@ export function StatCard({
         ? "text-lime-700"
         : "text-clay-500";
 
+  const bar =
+    tone === "dark"
+      ? "bg-[#D3F36B]"
+      : deltaIsGood === false
+        ? "bg-red-600"
+        : hint?.toLowerCase().includes("pending") || hint?.toLowerCase().includes("await")
+          ? "bg-[#F0C419]"
+          : "bg-[#D3F36B]";
+
   return (
     <div
       className={cn(
-        "rounded-lg border p-5 shadow-xs md:p-6",
-        tone === "dark"
-          ? "border-forest-700 bg-forest-900 text-white"
-          : "border-line bg-surface text-ink-900",
+        "stat-card",
+        tone === "dark" && "border-white/10 bg-[#0E1F1A] text-white",
       )}
     >
+      <span className={cn("stat-card__bar", bar)} />
       <div className="flex items-start justify-between gap-3">
         <p
           className={cn(
-            "font-sans text-[11px] font-semibold uppercase tracking-[0.14em]",
-            tone === "dark" ? "text-forest-100/70" : "text-ink-400",
+            "text-[11px] font-semibold text-[#5A6B7D]",
+            tone === "dark" && "text-white/65",
           )}
         >
           {label}
         </p>
         {Icon ? (
-          <Icon
-            className={cn("h-4 w-4", tone === "dark" ? "text-lime-500" : "text-ink-400")}
-          />
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[#D3F36B]/25">
+            <Icon className="h-3.5 w-3.5 text-[#0E1F1A]" strokeWidth={1.75} />
+          </span>
         ) : null}
       </div>
       <p
         className={cn(
-          "mt-3 font-display text-3xl font-bold tabular-nums tracking-[-0.02em] md:text-4xl",
-          tone === "dark" && "text-lime-500",
+          "mt-2 text-lg font-extrabold tabular-nums tracking-tight text-[#0E1F1A] sm:text-xl",
+          tone === "dark" && "text-[#D3F36B]",
         )}
       >
         {shown}

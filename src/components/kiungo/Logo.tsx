@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/kiungo/BrandMark";
+import { BRAND } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 export function Logo({
@@ -16,18 +18,14 @@ export function Logo({
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center gap-2 min-h-11",
+        "inline-flex min-h-11 items-center gap-2.5",
         tone === "dark" ? "text-white" : "text-ink-900",
         className,
       )}
     >
-      <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-lime-500 text-forest-900 font-display text-sm font-bold">
-        K
-      </span>
+      <BrandMark size={compact ? 32 : 36} />
       {!compact ? (
-        <span className="font-display text-lg font-semibold tracking-[-0.02em]">
-          Kiungo
-        </span>
+        <span className="font-display text-lg font-bold tracking-[-0.03em]">{BRAND.name}</span>
       ) : null}
     </Link>
   );

@@ -15,7 +15,31 @@ export default async function ReviewPage() {
     () =>
       prisma.claim.findMany({
         where: { status: { in: ["QUEUED", "EDGE_CHECKED", "SUBMITTED", "FLAGGED"] } },
-        include: { entity: true, contractLine: true, site: true, evidence: true, edgeChecks: true },
+        select: {
+          id: true,
+          ref: true,
+          quantity: true,
+          submittedAt: true,
+          submittedLat: true,
+          submittedLng: true,
+          driftMeters: true,
+          entity: { select: { legalName: true, verification: true } },
+          contractLine: { select: { itemName: true, unit: true } },
+          site: { select: { id: true, name: true } },
+          evidence: {
+            take: 1,
+            select: {
+              id: true,
+              url: true,
+              capturedAt: true,
+              exifLat: true,
+              exifLng: true,
+              sha256: true,
+              deviceHint: true,
+            },
+          },
+          edgeChecks: { select: { id: true, check: true, passed: true } },
+        },
         orderBy: { submittedAt: "asc" },
       }),
     [],

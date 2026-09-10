@@ -1,60 +1,59 @@
 @import "tailwindcss";
+@import "./portal.css";
+@import "./marketing.css";
 
 @theme {
-  /* ——— Brand ——— */
-  --color-forest-950: #0A1713;
-  --color-forest-900: #0E1F1A;
-  --color-forest-800: #16362C;
-  --color-forest-700: #1F4A3C;
-  --color-forest-600: #2C6350;
-  --color-forest-100: #E7EEE9;
-  --color-forest-50: #F2F6F3;
+  --color-forest-950: #0a1712;
+  --color-forest-900: #0e1f1a;
+  --color-forest-800: #1a3a2e;
+  --color-forest-700: #173028;
+  --color-forest-600: #2c6350;
+  --color-forest-100: #e8f0ea;
+  --color-forest-50: #f7faf6;
 
-  --color-lime-500: #D3F36B;
-  --color-lime-600: #BFE04F;
-  --color-lime-700: #A8C948;
-  --color-lime-100: #F1FBD4;
+  --color-lime-500: #d3f36b;
+  --color-lime-600: #c8f14a;
+  --color-lime-700: #3b7a4e;
+  --color-lime-100: #f4fbe3;
 
-  --color-gold-500: #E8B44A;
-  --color-gold-100: #FBF1DC;
+  --color-gold-500: #f0c419;
+  --color-gold-100: #fff8e0;
 
-  --color-clay-500: #C4643C;
-  --color-clay-100: #FBEDE7;
+  --color-clay-500: hsl(4 72% 48%);
+  --color-clay-100: #fef2f2;
+  --color-destructive: hsl(4 72% 48%);
 
-  --color-sky-500: #3E7C9B;
-  --color-sky-100: #E4EFF4;
+  --color-sky-500: #3e7c9b;
+  --color-sky-100: #e4eff4;
 
-  /* ——— Neutrals ——— */
-  --color-paper: #FBFAF6;
-  --color-surface: #FFFFFF;
-  --color-ink-900: #13201C;
-  --color-ink-600: #4A5952;
-  --color-ink-400: #6B7C74;
-  --color-line: #DDE4DE;
-  --color-line-soft: #EDF1EE;
+  --color-paper: #eef2ee;
+  --color-surface: #ffffff;
+  --color-ink-900: #0e1f1a;
+  --color-ink-600: #5a6b7d;
+  --color-ink-400: #5a6b7d;
+  --color-line: #e3e7e0;
+  --color-line-soft: #f7faf6;
 
-  /* ——— Type ——— */
-  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-display: var(--font-space), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-marketing: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex), ui-monospace, monospace;
 
-  /* ——— Radius ——— */
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
   --radius-pill: 999px;
 
-  /* ——— Shadow (soft, warm, never black) ——— */
-  --shadow-xs: 0 1px 2px rgba(19, 32, 28, 0.05);
-  --shadow-sm: 0 2px 8px rgba(19, 32, 28, 0.06);
-  --shadow-md: 0 6px 20px rgba(19, 32, 28, 0.08);
-  --shadow-lg: 0 16px 44px rgba(19, 32, 28, 0.12);
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: 0 8px 28px rgba(14, 31, 26, 0.08);
+  --shadow-lg: 0 18px 44px rgba(14, 31, 26, 0.14);
 }
 
 @layer base {
   * {
-    border-color: var(--color-line);
+    border-color: rgba(14, 31, 26, 0.1);
   }
 
   html {
@@ -62,20 +61,29 @@
   }
 
   body {
-    background-color: var(--color-paper);
-    color: var(--color-ink-900);
+    background-color: #eef2ee;
+    color: #0e1f1a;
     font-family: var(--font-sans);
-    font-size: 0.875rem;
-    line-height: 1.625;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.55;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    line-height: 1.25;
   }
 
   svg.lucide {
-    stroke-width: 1.5;
+    stroke-width: 1.75;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-lime-600);
+    outline: 2px solid rgba(211, 243, 107, 0.9);
     outline-offset: 2px;
+    box-shadow: 0 0 0 2px rgba(211, 243, 107, 0.25);
   }
 }
 
