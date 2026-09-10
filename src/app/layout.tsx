@@ -28,20 +28,41 @@ const plex = IBM_Plex_Mono({
   variable: "--font-plex",
 });
 
+const SOCIAL_TITLE = "Kiungo — Verified delivery for Kenya housing";
+const SOCIAL_DESCRIPTION =
+  "Who supplied what, with GPS and photo evidence. Settlement follows the work — not a form.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Kiungo — Sector operating infrastructure for Kenya",
+    default: SOCIAL_TITLE,
     template: "%s | Kiungo",
   },
-  description:
-    "Kiungo is the operating layer for a sector. Vertical one is housing and construction.",
+  description: SOCIAL_DESCRIPTION,
+  applicationName: "Kiungo",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: SITE_URL,
     siteName: "Kiungo",
     locale: "en_KE",
+    title: SOCIAL_TITLE,
+    description: SOCIAL_DESCRIPTION,
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Kiungo — verified delivery for Kenya housing and construction",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SOCIAL_TITLE,
+    description: SOCIAL_DESCRIPTION,
+    images: ["/twitter-image"],
   },
   icons: {
     icon: "/icon",
