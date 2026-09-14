@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  Bookmark,
   Building2,
   ClipboardCheck,
   FileText,
@@ -32,6 +33,12 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Opportunities",
         icon: Sparkles,
         roles: ["SUPPLIER", "CONTRACTOR", "PROGRAMME", "ADMIN"],
+      },
+      {
+        href: "/shortlist",
+        label: "Shortlist",
+        icon: Bookmark,
+        roles: ["CONTRACTOR", "PROGRAMME", "FINANCIER", "ADMIN"],
       },
     ],
   },
@@ -94,3 +101,46 @@ export function isActivePath(pathname: string, href: string): boolean {
   }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
+
+export function mobileMainTabs(role: Role): { href: string; label: string; icon: LucideIcon; fab?: boolean }[] {
+  const registry = { href: "/registry", label: "Registry", icon: Search };
+  if (role === "SUPPLIER" || role === "CONTRACTOR" || role === "ADMIN") {
+    return [
+      registry,
+      { href: "/console", label: "Console", icon: LayoutDashboard },
+      { href: "/console/claims/new", label: "Submit", icon: FileText, fab: true },
+      { href: "/opportunities", label: "Work", icon: Sparkles },
+    ];
+  }
+  if (role === "REVIEWER") {
+    return [
+      registry,
+      { href: "/review", label: "Review", icon: ClipboardCheck },
+      { href: "/review", label: "Queue", icon: ClipboardCheck, fab: true },
+      { href: "/walkthrough", label: "Tours", icon: Sparkles },
+    ];
+  }
+  if (role === "PROGRAMME") {
+    return [
+      registry,
+      { href: "/intelligence", label: "Programme", icon: Building2 },
+      { href: "/review", label: "Queue", icon: ClipboardCheck, fab: true },
+      { href: "/opportunities", label: "Work", icon: Sparkles },
+    ];
+  }
+  if (role === "FINANCIER") {
+    return [
+      registry,
+      { href: "/finance", label: "Finance", icon: Landmark },
+      { href: "/intelligence", label: "Book", icon: Building2, fab: true },
+      { href: "/shortlist", label: "List", icon: Bookmark },
+    ];
+  }
+  return [
+    registry,
+    { href: "/build", label: "Build", icon: Building2 },
+    { href: "/build", label: "Start", icon: Building2, fab: true },
+    { href: "/walkthrough", label: "Tours", icon: Sparkles },
+  ];
+}
+

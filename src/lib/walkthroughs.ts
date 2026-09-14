@@ -32,7 +32,7 @@ export const WALKTHROUGHS: Walkthrough[] = [
     promise:
       "A youth- and women-owned fabricator in Nairobi submits evidence at Mukuru. A site officer approves it. Settlement and reliability follow the work — not a form.",
     setup:
-      "Wear two hats: Amina (supplier), then Daniel (reviewer), then Amina again for the receipt. Play demo writes a real claim. The green “approved” bubble in the chat is theatrical — Daniel must still press A on Review. Demo “today” is 9 September 2026.",
+      "Work as Amina, then as Daniel the site officer, then Amina again to read the receipt. Send the WhatsApp delivery once. Daniel must still approve it on Review.",
     outcome:
       "A claim exists, a reviewer has decided, Amina can open the receipt, and finance can price her on evidenced work.",
     steps: [
@@ -46,7 +46,7 @@ export const WALKTHROUGHS: Walkthrough[] = [
           "Legal name Kariobangi Metal Works Ltd, category Fabricator, county Nairobi",
           "Verification badge Verified — this is identity, not a directory listing",
           "Ownership chips Youth, Women and Jua Kali",
-          "A reliability score computed from her delivery history (live seed is typically around 73, not a typed-in 78)",
+          "A reliability score computed from her delivery history (this file typically shows around 73, not a typed-in 78)",
         ],
       },
       {
@@ -67,13 +67,13 @@ export const WALKTHROUGHS: Walkthrough[] = [
         personaId: "user-amina",
         href: "/whatsapp",
         title: "Submit from WhatsApp",
-        do: "Press Play demo once. Do not mash it. The chat walks contract AHP/MKR/2026/0142, quantity 40, a delivery photo, and a GPS pin 84 m from Mukuru Phase 2. Wait until a live claim reference appears in the thread or the system log.",
+        do: "Press Send this delivery once. Do not mash it. The chat walks contract AHP/MKR/2026/0142, quantity 40, a delivery photo, and a GPS pin 84 m from Mukuru Phase 2. Wait until a claim reference appears.",
         lookFor: [
           "Edge checks: EXIF, timestamp, duplicate hash, quantity within balance (40 ≤ remaining)",
-          "System view on the right: POST /claims 202, geo.resolve → mukuru-phase-2, drift=84m",
+          "On a wide screen, Show checks lists POST /claims, geo.resolve → mukuru-phase-2, drift=84m",
           "A claim reference (CLM-2026-…) when the write succeeds — note it, you will hunt it next",
         ],
-        note: "The “approved by D. Kiptoo” bubble after about three seconds is script. Quality 1.05 / KSh 203,700 in that bubble is also script. Live approval is the next step; live value is typically 1.10 / KSh 213,400.",
+        note: "The chat will say the claim is queued. Live approval is the next step. Live value is typically 1.10 / KSh 213,400.",
       },
       {
         id: "daniel-queue",
@@ -144,7 +144,7 @@ export const WALKTHROUGHS: Walkthrough[] = [
         personaId: "user-grace",
         href: "/registry/kariobangi-metal-works",
         title: "Inspect before you invite",
-        do: "Read capability, certifications, reliability and evidenced deliveries into Mukuru. Press Invite to quote if you want the shortlist action — it is recorded as a demo invite, not a live tender.",
+        do: "Read capability, certifications, reliability and evidenced deliveries into Mukuru. Invite to quote adds them to your shortlist — it is a request, not a contract award.",
         lookFor: [
           "Issuing authority and expiry on each certificate",
           "Delivery history you could defend in an audit",
@@ -175,7 +175,7 @@ export const WALKTHROUGHS: Walkthrough[] = [
     promise:
       "A site officer does not “trust the photo”. The queue is geo-routed, edge-checked, and decided with a keyboard.",
     setup:
-      "You are Daniel. Claims from WhatsApp and web land here after edge checks. The list is oldest-first, grouped by site. If you just ran Amina’s WhatsApp play, decide that 40-unit door-frame row.",
+      "You are Daniel. Claims from WhatsApp and web land here after edge checks. The list is oldest-first, grouped by site. If you just sent Amina’s WhatsApp delivery, decide that 40-unit door-frame row.",
     outcome:
       "You can approve, query or reject with evidence on screen, and you know why batch approve sometimes refuses.",
     steps: [
@@ -202,7 +202,7 @@ export const WALKTHROUGHS: Walkthrough[] = [
           "Approve selected disabled, with copy that a hard check failed",
           "After approve, the row leaves this queue and the count drops",
         ],
-        note: "If you just ran Amina’s WhatsApp play, her new claim is Kariobangi · 40 units · steel door frame under Mukuru Phase 2.",
+        note: "If you just sent Amina’s WhatsApp delivery, her new claim is Kariobangi · 40 units · steel door frame under Mukuru Phase 2.",
       },
       {
         id: "site-page",
@@ -228,7 +228,7 @@ export const WALKTHROUGHS: Walkthrough[] = [
     promise:
       "The platform is not a directory you can talk your way into. Pending identity blocks supplier credit even when the workshop has deliveries.",
     setup:
-      "You are Peter in Kisumu. Contrast him with Amina. Same role class. He is not an empty file — he has seeded deliveries into Lumumba Housing Estate. The gate is verification, not existence.",
+      "You are Peter in Kisumu. Contrast him with Amina. Same role class. He is not an empty file — he has recorded deliveries into Lumumba Housing Estate. The gate is verification, not existence.",
     outcome:
       "Reviewers see why “just onboard everyone” would break credit and procurement: PENDING is a state, not a missing row.",
     steps: [
@@ -237,7 +237,7 @@ export const WALKTHROUGHS: Walkthrough[] = [
         personaId: "user-peter",
         href: "/registry/kondele-fabricators",
         title: "Read a pending file",
-        do: "Open Kondele Fabricators Self-Help Group. Verification is Pending. He may still show a computed reliability number from seeded claims — that is allowed. Certification is unconfirmed.",
+        do: "Open Kondele Fabricators Self-Help Group. Verification is Pending. He may still show a computed reliability number from recorded claims — that is allowed. Certification is unconfirmed.",
         lookFor: [
           "Pending, not Verified — banner says certification is unconfirmed",
           "Kisumu / Kondele ward, not Nairobi / Embakasi South",
@@ -252,7 +252,7 @@ export const WALKTHROUGHS: Walkthrough[] = [
         title: "His console is the same product, thinner",
         do: "Open Console as Peter. Greeting and layout match Amina’s. Volume does not. This is the empty-ish side of the same product — not a different app.",
         lookFor: [
-          "Good morning, Peter — persona switch is real, not a caption",
+          "Good morning, Peter — the greeting is Peter, not a caption",
           "A short claims list (Kisumu), not Amina’s Mukuru receipt trail",
           "What a supplier sees before they are in the verified programme",
         ],
@@ -314,13 +314,12 @@ export const WALKTHROUGHS: Walkthrough[] = [
         personaId: "user-faith",
         href: "/how-it-works#api",
         title: "Show the machine-readable layer",
-        do: "Scroll to Public API. Open GET /api/public/entities in a new tab, then the Kariobangi entity route, then /api/public/stats. Contact and values are stripped. Stay on this page — do not lose the dock.",
+        do: "Scroll to For integrators. The preview is Kariobangi Metal Works with phones and values stripped. Then open the same file in the registry so you can show the human view and the machine view side by side.",
         lookFor: [
-          "GET /api/public/entities and GET /api/public/stats",
-          "GET /api/public/entities/kariobangi-metal-works — same file, no phone",
-          "Cache-Control: public, s-maxage=300. CORS is open on these routes",
+          "GET /api/public/entities, /entities/kariobangi-metal-works, and /stats — listed, not dumped as a new page",
+          "Preview has no phone and no contract value",
+          "Open this file in the registry stays inside Kiungo",
         ],
-        note: "Open the JSON in a new tab so the walkthrough dock stays on How it works.",
       },
     ],
   },
@@ -399,6 +398,16 @@ export function withWalkQuery(href: string, slug: string, step: number): string 
   const base = hashIndex === -1 ? href : href.slice(0, hashIndex);
   const joiner = base.includes("?") ? "&" : "?";
   return `${base}${joiner}wt=${encodeURIComponent(slug)}&wts=${step}${hash}`;
+}
+
+export function appendWalkParams(
+  href: string,
+  wt?: string | null,
+  wts?: string | number | null,
+): string {
+  if (!wt) return href;
+  const step = typeof wts === "number" ? wts : Number.parseInt(String(wts ?? "0"), 10);
+  return withWalkQuery(href, wt, Number.isFinite(step) ? step : 0);
 }
 
 export function stepMatches(href: string, pathname: string): boolean {

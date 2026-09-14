@@ -14,7 +14,7 @@ export default function AppError({
     <EmptyState
       icon={AlertTriangle}
       title="This view could not be loaded"
-      description="Seed the database if it is empty, then retry. The demonstration never dead-ends."
+      description="This view could not be loaded. Retry, or open the registry from the sidebar."
       action={
         <Button onClick={reset} className="min-h-11">
           Retry

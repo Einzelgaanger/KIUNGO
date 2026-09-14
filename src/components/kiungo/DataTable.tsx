@@ -109,7 +109,7 @@ export function DataTable<TData>({
           </DropdownMenu>
           <Button variant="outline" size="sm" onClick={exportCsv}>
             <Download className="h-4 w-4" />
-            CSV
+            Download table
           </Button>
         </div>
       </div>

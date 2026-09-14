@@ -20,13 +20,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { COPY, ENTITY_CATEGORY_LABELS, countyName } from "@/lib/constants";
+import { COPY, ENTITY_CATEGORY_LABELS, VERIFICATION_STATUS_LABELS, countyName } from "@/lib/constants";
 import { getEntityBySlug, scoreForEntity } from "@/lib/entities";
 import { SITE_URL } from "@/lib/site";
 import { formatDatePair, formatQuantity, initials } from "@/lib/format";
 import { parseStringArray } from "@/lib/json";
 import { getSession } from "@/lib/session";
 import { startOfIsoWeek } from "@/lib/scoring";
+import type { Role } from "@/types";
+
+const CAN_SEE_CONTACT: Role[] = ["CONTRACTOR", "PROGRAMME", "FINANCIER", "ADMIN"];
 
 export async function generateMetadata({
   params,
@@ -38,7 +41,7 @@ export async function generateMetadata({
     const entity = await getEntityBySlug(slug);
     if (!entity) return { title: "Entity" };
     return {
-      title: `${entity.legalName} — verified ${ENTITY_CATEGORY_LABELS[entity.category].toLowerCase()} in ${countyName(entity.countyCode)}`,
+      title: `${entity.legalName} — ${entity.verification === "VERIFIED" ? "verified" : VERIFICATION_STATUS_LABELS[entity.verification].toLowerCase()} ${ENTITY_CATEGORY_LABELS[entity.category].toLowerCase()} in ${countyName(entity.countyCode)}`,
       description: entity.description ?? `${entity.legalName} on the Kiungo registry.`,
       alternates: { canonical: `/registry/${entity.slug}` },
       openGraph: {
@@ -70,8 +73,8 @@ export default async function EntityProfilePage({
   const tags = parseStringArray(entity.ownershipTags);
   const subs = parseStringArray(entity.subcategories);
   const latestCert = entity.certifications[0] ?? null;
-  const canSeeContact = session.role !== "CITIZEN";
   const party = session.entityId === entity.id;
+  const canSeeContact = party || CAN_SEE_CONTACT.includes(session.role);
   const completed = entity.claims.filter((c) => c.status === "SETTLED" || c.status === "APPROVED");
   const capability = Array.from(new Set(entity.claims.map((c) => c.contractLine.itemName)));
   const sites = Array.from(
@@ -334,7 +337,7 @@ export default async function EntityProfilePage({
                   </div>
                 ) : (
                   <p className="mt-3 text-sm text-ink-600">
-                    Sign in as a verified buyer to see contact details.
+                    Switch to a contractor, programme or financier profile to see contact details.
                   </p>
                 )}
               </CardContent>
@@ -368,7 +371,13 @@ export default async function EntityProfilePage({
                 </ul>
               </CardContent>
             </Card>
-            <ProfileActions entityId={entity.id} slug={entity.slug} name={entity.legalName} />
+            <ProfileActions
+              entityId={entity.id}
+              slug={entity.slug}
+              name={entity.legalName}
+              role={session.role}
+              ownFile={session.entityId === entity.id}
+            />
           </aside>
         </div>
       </div>

@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { submitClaim } from "@/actions/claims";
+import { InstantLink } from "@/components/kiungo/InstantLink";
 import { Button } from "@/components/ui/button";
-import { formatKes } from "@/lib/format";
 import { offsetLatLng } from "@/lib/geo";
+import { toast } from "sonner";
 
 type Msg = { id: string; dir: "in" | "out"; text?: string; kind?: "photo" | "location" | "checks" };
 
@@ -60,7 +61,7 @@ export function WhatsAppDemo({
   const [checks, setChecks] = useState(0);
   const [logs, setLogs] = useState(0);
   const [ref, setRef] = useState<string | null>(null);
-  const [approvedCopy, setApprovedCopy] = useState<string | null>(null);
+  const [details, setDetails] = useState(false);
   const [mode, setMode] = useState<"idle" | "play" | "step">("idle");
   const [pending, start] = useTransition();
   const endRef = useRef<HTMLDivElement>(null);
@@ -71,7 +72,7 @@ export function WhatsAppDemo({
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [visible, typing, checks, draftOut, approvedCopy]);
+  }, [visible, typing, checks, draftOut, ref]);
 
   function clearTimers() {
     for (const id of timers.current) window.clearTimeout(id);
@@ -91,7 +92,6 @@ export function WhatsAppDemo({
     setChecks(0);
     setLogs(0);
     setRef(null);
-    setApprovedCopy(null);
     setMode("idle");
     written.current = false;
   }
@@ -120,11 +120,9 @@ export function WhatsAppDemo({
       });
       if (result.ok) {
         setRef(result.data.ref);
-        later(3000, () => {
-          setApprovedCopy(
-            `✅ ${result.data.ref} approved by D. Kiptoo.\nQuality multiplier: 1.05\nValue: ${formatKes(203700)}\nYour share: ${formatKes(162960)}\nPayment reference: MPX7K4Q2N1\nReliability score: 78 → 79 ⬆`,
-          );
-        });
+      } else {
+        written.current = false;
+        toast.error(result.error);
       }
     });
   }
@@ -191,7 +189,7 @@ export function WhatsAppDemo({
   }, [mode, visible, typing, draftOut, checks]);
 
   const submittedCopy = ref
-    ? `Claim ${ref} submitted.\nRouted to: D. Kiptoo, Site Officer\nIndicative value: ${formatKes(194000)}\nYou'll get a message when it's approved.`
+    ? `Claim ${ref} received.\nRouted to D. Kiptoo, site officer.\nIt is in the review queue. You will see the receipt after it is approved.`
     : null;
 
   return (
@@ -205,7 +203,15 @@ export function WhatsAppDemo({
           backgroundSize: "48px 48px",
         }}
       />
-      <div className="relative mx-auto flex min-h-svh w-full max-w-[1100px] flex-col items-center gap-6 px-4 py-8 lg:flex-row lg:items-center lg:justify-center">
+      <div className="relative z-10 flex items-center justify-between gap-3 px-4 py-4">
+        <InstantLink href="/console" className="text-sm font-semibold text-white/80 hover:text-white">
+          ← Back to console
+        </InstantLink>
+        <InstantLink href="/review" className="text-sm font-semibold text-white/80 hover:text-white">
+          Open review queue
+        </InstantLink>
+      </div>
+      <div className="relative mx-auto flex min-h-[calc(100svh-3.5rem)] w-full max-w-[1100px] flex-col items-center gap-6 px-4 pb-8 lg:flex-row lg:items-center lg:justify-center">
         <div className="w-full max-w-[280px]">
           <div
             className="overflow-hidden rounded-[28px] border-[6px] border-forest-950 bg-paper text-ink-900 shadow-lg"
@@ -217,7 +223,7 @@ export function WhatsAppDemo({
               </span>
               <div>
                 <p className="text-[11px] font-medium leading-tight">Kiungo</p>
-                <p className="text-[8px] leading-tight text-forest-100/70">housing.delivery.v1</p>
+                <p className="text-[8px] leading-tight text-forest-100/70">Delivery channel</p>
               </div>
             </div>
             <div className="flex h-[calc(560px-40px)] flex-col gap-1.5 overflow-y-auto bg-paper p-2">
@@ -230,7 +236,6 @@ export function WhatsAppDemo({
               {submittedCopy && visible >= SCRIPT.length && checks >= 4 ? (
                 <Bubble msg={{ id: "sub", dir: "in", text: submittedCopy }} checks={4} />
               ) : null}
-              {approvedCopy ? <Bubble msg={{ id: "ok", dir: "in", text: approvedCopy }} checks={4} /> : null}
               {typing ? (
                 <div className="flex w-12 gap-1 rounded-md rounded-tl-sm bg-surface px-2 py-1.5 shadow-xs">
                   <span className="h-1 w-1 animate-bounce rounded-full bg-ink-400" />
@@ -242,7 +247,7 @@ export function WhatsAppDemo({
             </div>
           </div>
           <p className="mt-2.5 text-center text-[11px] text-forest-100/70">
-            Simulated. Production uses WhatsApp Business API with the same flow definition.
+            Same checks as the web form. After send, the claim waits in Review.
           </p>
           <div className="mt-3 flex flex-wrap justify-center gap-2">
             <Button
@@ -252,7 +257,7 @@ export function WhatsAppDemo({
                 setMode("play");
               }}
             >
-              Play demo
+              Send this delivery
             </Button>
             <Button
               variant="darkGhost"
@@ -262,24 +267,39 @@ export function WhatsAppDemo({
               }}
               disabled={pending}
             >
-              Step
+              Next message
             </Button>
             <Button variant="darkGhost" onClick={reset}>
-              Reset
+              Start over
             </Button>
           </div>
         </div>
 
-        <aside className="hidden w-full max-w-md rounded-lg border border-forest-700 bg-forest-900 p-3 font-mono text-[11px] leading-relaxed text-forest-100 lg:block">
-          <p className="mb-2 font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-lime-500">
-            System view
-          </p>
-          {LOG.slice(0, logs).map((line) => (
-            <p key={line} className="whitespace-pre">
-              {line}
+        <aside className="hidden w-full max-w-md lg:block">
+          <button
+            type="button"
+            className="text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-lime-500"
+            onClick={() => setDetails((value) => !value)}
+          >
+            {details ? "Hide checks" : "Show checks"}
+          </button>
+          {details ? (
+            <div className="mt-3 rounded-lg border border-forest-700 bg-forest-900 p-3 font-mono text-[11px] leading-relaxed text-forest-100">
+              <p className="mb-2 font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-lime-500">
+                What the system recorded
+              </p>
+              {LOG.slice(0, logs).map((line) => (
+                <p key={line} className="whitespace-pre">
+                  {line}
+                </p>
+              ))}
+              {ref ? <p className="mt-3 text-lime-500">{ref} · queued for review</p> : null}
+            </div>
+          ) : (
+            <p className="mt-2 text-sm text-forest-100/70">
+              Photo, GPS pin and quantity are checked, then the claim is routed to the site officer.
             </p>
-          ))}
-          {ref ? <p className="mt-3 text-lime-500">claim.ref {ref} · status QUEUED</p> : null}
+          )}
         </aside>
       </div>
     </div>
@@ -297,7 +317,7 @@ function Bubble({ msg, checks }: { msg: Msg; checks: number }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/mock/delivery-07.jpg"
-          alt="Delivery evidence for WhatsApp demo"
+          alt="Delivery photo"
           className="h-24 w-full rounded-md object-cover"
         />
         <p className="px-1.5 py-0.5 text-[8px] text-ink-400">11:04 ✓✓</p>

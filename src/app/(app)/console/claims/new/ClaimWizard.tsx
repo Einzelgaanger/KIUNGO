@@ -123,7 +123,7 @@ export function ClaimWizard({ lines }: { lines: Line[] }) {
   if (lines.length === 0) {
     return (
       <p className="rounded-lg border border-line bg-surface p-6 text-sm text-ink-600">
-        No active contract lines. Seed the database or switch to Amina Wanjiru.
+        No active contracts on this account. Switch to a supplier profile that has live lines.
       </p>
     );
   }
@@ -241,7 +241,7 @@ export function ClaimWizard({ lines }: { lines: Line[] }) {
               Use my current location
             </Button>
             <Button type="button" variant="outline" onClick={demoLocation}>
-              Use demo location
+              Use the site pin
             </Button>
           </div>
           <MapView

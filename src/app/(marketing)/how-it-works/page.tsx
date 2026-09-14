@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SiteNav } from "@/components/marketing/SiteNav";
 import { Reveal } from "@/components/marketing/Reveal";
+import { getEntityBySlug } from "@/lib/entities";
+import { toPublicEntity } from "@/lib/public-api";
 
 export const metadata: Metadata = { title: "How it works" };
 
@@ -15,7 +17,18 @@ const STEPS = [
   { t: "Settle", d: "A settlement instruction is recorded. Reliability is recomputed from history." },
 ];
 
-export default function HowItWorksPage() {
+export default async function HowItWorksPage() {
+  let preview: string | null = null;
+  try {
+    const entity = await getEntityBySlug("kariobangi-metal-works");
+    if (entity) {
+      const capability = Array.from(new Set(entity.claims.map((claim) => claim.contractLine.itemName)));
+      preview = JSON.stringify(toPublicEntity(entity, capability), null, 2);
+    }
+  } catch {
+    preview = null;
+  }
+
   return (
     <>
       <SiteNav />
@@ -49,29 +62,23 @@ export default function HowItWorksPage() {
 
       <section className="scroll-margin-nav bg-white py-16" id="api">
         <div className="container max-w-3xl">
-          <p className="label dark">Public API</p>
-          <h2 className="mt-3 font-display text-3xl font-bold text-[#0E1F1A]">Machine-readable registry</h2>
+          <p className="label dark">For integrators</p>
+          <h2 className="mt-3 font-display text-3xl font-bold text-[#0E1F1A]">The same registry, without phones or values</h2>
           <p className="mt-3 text-sm text-[#5A6B60]">
-            Contact details, contract values and claim values are private. Everything else is machine-readable.
+            A ministry or bank can call the registry from their own systems. Contact details, contract values and claim
+            values stay private. Reviewers stay in the product — this is the record, not a download.
           </p>
-          <ul className="mt-6 space-y-3 font-mono text-sm font-semibold">
-            <li>
-              <Link href="/api/public/entities" className="text-[#2E6B44] underline">
-                GET /api/public/entities
-              </Link>
-            </li>
-            <li>
-              <Link href="/api/public/entities/kariobangi-metal-works" className="text-[#2E6B44] underline">
-                GET /api/public/entities/kariobangi-metal-works
-              </Link>
-            </li>
-            <li>
-              <Link href="/api/public/stats" className="text-[#2E6B44] underline">
-                GET /api/public/stats
-              </Link>
-            </li>
+          <ul className="mt-6 space-y-2 font-mono text-sm font-semibold text-[#0E1F1A]">
+            <li>GET /api/public/entities</li>
+            <li>GET /api/public/entities/kariobangi-metal-works</li>
+            <li>GET /api/public/stats</li>
           </ul>
-          <p className="mt-6 text-[11px] text-[#5A6B7D]">Cache-Control: public, s-maxage=300. CORS is open on these routes.</p>
+          {preview ? (
+            <pre className="mt-6 max-h-80 overflow-auto rounded-2xl border border-[#E3E7E0] bg-[#F3FAF5] p-4 text-[12px] leading-relaxed text-[#0E1F1A]">
+              {preview}
+            </pre>
+          ) : null}
+          <p className="mt-4 text-[11px] text-[#5A6B7D]">Cached for five minutes. CORS is open on these routes.</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/walkthrough" className="btn btn-dark">
               Live walkthroughs
@@ -79,8 +86,8 @@ export default function HowItWorksPage() {
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
             </Link>
-            <Link href="/registry" className="btn btn-ghost-dark border-[#0E1F1A]/20 text-[#0E1F1A]">
-              Open the registry
+            <Link href="/registry/kariobangi-metal-works" className="btn btn-ghost-dark border-[#0E1F1A]/20 text-[#0E1F1A]">
+              Open this file in the registry
             </Link>
           </div>
         </div>

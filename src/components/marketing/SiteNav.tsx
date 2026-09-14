@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 const LINKS = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/walkthrough", label: "Walkthroughs" },
-  { href: "/whatsapp", label: "WhatsApp demo" },
+  { href: "/whatsapp", label: "WhatsApp" },
   { href: "/registry", label: "Live registry" },
 ];
 

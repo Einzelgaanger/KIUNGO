@@ -7,7 +7,7 @@ export default function WhatsAppLoading() {
             <span className="h-6 w-6 rounded-full bg-[#D3F36B]" />
             <div>
               <p className="text-[11px] font-semibold leading-tight text-white">Kiungo</p>
-              <p className="text-[8px] leading-tight text-white/60">Opening WhatsApp demo…</p>
+              <p className="text-[8px] leading-tight text-white/60">Opening WhatsApp…</p>
             </div>
           </div>
           <div className="space-y-3 p-4">

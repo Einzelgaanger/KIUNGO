@@ -1,12 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MoreHorizontal, Plus, Search, LayoutDashboard, ClipboardCheck, Sparkles } from "lucide-react";
+import { MoreHorizontal, Plus } from "lucide-react";
 import { useState } from "react";
 import { InstantLink } from "@/components/kiungo/InstantLink";
 import { RoleSwitcher } from "@/components/kiungo/RoleSwitcher";
-import { isNavVisible, NAV_GROUPS } from "@/components/kiungo/nav";
-import { COPY, countyName } from "@/lib/constants";
+import { isNavVisible, mobileMainTabs, NAV_GROUPS } from "@/components/kiungo/nav";
+import { COPY, ROLE_LABELS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { Session } from "@/types";
 import {
@@ -20,17 +20,7 @@ import {
 export function MobileTabBar({ session }: { session: Session }) {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
-  const showReview = session.role === "REVIEWER" || session.role === "PROGRAMME" || session.role === "ADMIN";
-  const fourth = showReview
-    ? { href: "/review", label: "Review", icon: ClipboardCheck }
-    : { href: "/opportunities", label: "Opportunities", icon: Sparkles };
-
-  const tabs = [
-    { href: "/registry", label: "Registry", icon: Search },
-    { href: "/console", label: "Console", icon: LayoutDashboard },
-    { href: "/console/claims/new", label: "Submit", icon: Plus, fab: true },
-    fourth,
-  ];
+  const tabs = mobileMainTabs(session.role);
 
   const moreItems = NAV_GROUPS.flatMap((group) =>
     group.items.filter((item) => isNavVisible(item, session.role)),
@@ -47,14 +37,15 @@ export function MobileTabBar({ session }: { session: Session }) {
                 ? pathname === "/console" || pathname.startsWith("/console/claims")
                 : pathname === tab.href || pathname.startsWith(`${tab.href}/`);
             if ("fab" in tab && tab.fab) {
+              const FabIcon = tab.href === "/console/claims/new" ? Plus : Icon;
               return (
-                <li key={tab.href} className="flex justify-center">
+                <li key={`${tab.href}-fab`} className="flex justify-center">
                   <InstantLink
                     href={tab.href}
                     aria-label={tab.label}
                     className="-mt-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#D3F36B] text-[#0E1F1A] active:scale-95"
                   >
-                    <Icon className="h-6 w-6" strokeWidth={1.75} />
+                    <FabIcon className="h-6 w-6" strokeWidth={1.75} />
                   </InstantLink>
                 </li>
               );
@@ -99,7 +90,7 @@ export function MobileTabBar({ session }: { session: Session }) {
           <SheetHeader>
             <SheetTitle className="text-white">More</SheetTitle>
             <SheetDescription className="text-white/60">
-              {session.name} · {countyName(session.countyCode)}
+              {session.name} · {ROLE_LABELS[session.role]}
             </SheetDescription>
           </SheetHeader>
           <div className="grid gap-1 py-4">
@@ -130,7 +121,7 @@ export function MobileTabBar({ session }: { session: Session }) {
               className="sidebar-nav-link"
               pendingLabel="Opening WhatsApp…"
             >
-              WhatsApp demo
+              Report a delivery
             </InstantLink>
             <InstantLink
               href="/build"

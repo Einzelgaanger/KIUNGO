@@ -38,8 +38,8 @@ Logged as the build proceeds. The specification is the source of truth; this fil
 
 ## Phase 5
 
-- The WhatsApp approval bubble after three seconds is theatrical copy from §11.3. It does **not** call `decideClaim`, so the live claim remains `QUEUED` for Daniel's review queue — that is the demo beat.
-- Live value after a real approval follows §13.2 (typically 1.10 / KSh 213,400 for the 40-unit door-frame example), not the chat script's 1.05 / KSh 203,700.
+- WhatsApp chat no longer pretends Daniel approved the claim. Send writes a real QUEUED delivery; live approval is the Review keyboard. Live value after approval still follows §13.2 (typically 1.10 / KSh 213,400).
+- Shortlist and opportunity interest persist in `sessionStorage` on this device. They are not a procurement award or a government tender.
 
 ## Phase 6
 
@@ -61,6 +61,6 @@ Logged as the build proceeds. The specification is the source of truth; this fil
 - Swahili remains a production requirement; the MVP is English-only as specified.
 - Four-state handling on server pages uses App Router `loading.tsx` (skeleton) and `error.tsx` (retry), plus designed empty states when a query returns no rows.
 - Edge-check pass/fail uses `<CheckChip>`, not `<StatusBadge>`, because those are check results rather than claim or verification statuses.
-- Live scenario walkthroughs live at `/walkthrough`. Start (`/walkthrough/go/[slug]`) sets the persona cookie and redirects into the app with `?wt=` and `?wts=` (step index). The dock is not a product tour of empty chrome — each step names the person, the click, and what must be true on the seeded data. Peter’s walkthrough is PENDING identity, not an empty file; he can have seeded claims and a score while supplier finance stays closed.
+- Live scenario walkthroughs live at `/walkthrough`. Start (`/walkthrough/go/[slug]`) sets the persona cookie and redirects with `publicOrigin()` — Render’s `request.url` is `http://localhost:<port>`, which must never be used as the public host. The dock is not a product tour of empty chrome. Profile pages do not offer a JSON download; the public registry payload is previewed on How it works.
 - Live demo origin is `https://kiungo.jabali.studio` (`NEXT_PUBLIC_SITE_URL`). Render injects a non-SQLite `DATABASE_URL` at runtime, which emptied every page. Prisma is pinned to `file:./dev.db`, `src/lib/db.ts` overrides the client URL, `npm start` uses `scripts/start.mjs`, and the seeded `prisma/dev.db` is committed so the slug has data.
 - Site social card is `src/app/opengraph-image.tsx` (1200×630). WhatsApp reads `og:title`, `og:description` and that PNG; `metadataBase` is the live origin so the image URL is absolute.

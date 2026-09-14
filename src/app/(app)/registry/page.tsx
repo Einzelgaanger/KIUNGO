@@ -46,7 +46,7 @@ export default async function RegistryPage({
       page,
     });
   } catch {
-    error = "The registry could not be read. Seed the database and retry.";
+    error = "The registry could not be loaded. Try again in a moment.";
   }
 
   const start = result ? (result.page - 1) * result.limit + (result.rows.length > 0 ? 1 : 0) : 0;
@@ -112,7 +112,10 @@ export default async function RegistryPage({
           <EmptyState
             icon={SearchX}
             title={COPY.empty.registryFiltered.title}
-            description={COPY.empty.registryFiltered.description.replace("{total}", "180")}
+            description={COPY.empty.registryFiltered.description.replace(
+              "{total}",
+              formatNumber(result.counters.universe),
+            )}
             action={
               <Button asChild>
                 <Link href="/registry">Clear all filters</Link>

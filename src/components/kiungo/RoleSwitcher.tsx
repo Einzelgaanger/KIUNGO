@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 
 export function RoleSwitcher({
   currentUserId,
@@ -40,6 +41,8 @@ export function RoleSwitcher({
       const result = await switchPersona({ userId });
       if (result.ok) {
         router.refresh();
+      } else {
+        toast.error(result.error);
       }
     });
   }
@@ -55,7 +58,7 @@ export function RoleSwitcher({
             compact && "w-11 px-0",
             pending && "opacity-70",
           )}
-          aria-label="Switch demo persona"
+          aria-label="Switch user"
         >
           {compact ? (
             <span className="font-display text-xs font-semibold">
@@ -81,7 +84,7 @@ export function RoleSwitcher({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-72">
-        <DropdownMenuLabel>Demo personas</DropdownMenuLabel>
+        <DropdownMenuLabel>Switch user</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {DEMO_PERSONAS.map((persona) => (
           <DropdownMenuItem

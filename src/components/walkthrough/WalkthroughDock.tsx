@@ -13,6 +13,7 @@ import {
 } from "@/lib/walkthroughs";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { toast } from "sonner";
 
 const STORAGE_KEY = "kiungo_wt";
 
@@ -91,7 +92,10 @@ export function WalkthroughDock() {
     if (!walkthrough || !next) return;
     start(async () => {
       const result = await switchPersona({ userId: next.personaId });
-      if (!result.ok) return;
+      if (!result.ok) {
+        toast.error(result.error);
+        return;
+      }
       writeStored(walkthrough.slug, nextIndex);
       setStepIndex(nextIndex);
       router.push(withWalkQuery(next.href, walkthrough.slug, nextIndex));

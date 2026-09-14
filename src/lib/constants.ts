@@ -145,6 +145,7 @@ export const ROUTE_ROLES: Record<string, Role[] | "public"> = {
   "/console": ["SUPPLIER", "CONTRACTOR", "ADMIN"],
   "/review": ["REVIEWER", "PROGRAMME", "ADMIN"],
   "/opportunities": ["SUPPLIER", "CONTRACTOR", "PROGRAMME", "ADMIN"],
+  "/shortlist": ["CONTRACTOR", "PROGRAMME", "FINANCIER", "ADMIN"],
   "/finance": ["SUPPLIER", "CONTRACTOR", "FINANCIER", "ADMIN"],
   "/intelligence": ["PROGRAMME", "ADMIN", "FINANCIER"],
   "/build": "public",
@@ -168,7 +169,7 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     entityName: "Kariobangi Metal Works Ltd",
     countyCode: "047",
     phone: "+254712000001",
-    why: "The hero. Youth + women tagged, verified, reliability 78, active claims on Mukuru.",
+    why: "The hero. Youth + women tagged, verified, reliability computed from Mukuru deliveries.",
   },
   {
     id: "user-peter",
@@ -178,7 +179,7 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     entityName: "Kondele Fabricators Self-Help Group",
     countyCode: "042",
     phone: "+254712000002",
-    why: "The contrast. PENDING verification. May have seeded claims and a score; supplier finance stays closed.",
+    why: "The contrast. PENDING verification. May have recorded claims and a score; supplier finance stays closed.",
   },
   {
     id: "user-grace",
@@ -336,7 +337,7 @@ export const COPY = {
     headline: "The industry exists. The system doesn't.",
     sub: "Kiungo is the operating layer for a sector. It holds the identity of every participant, the verified record of what they did and the settlement of what they are owed. Vertical one is housing and construction.",
     ctaRegistry: "See the live registry",
-    ctaWhatsapp: "Open the WhatsApp demo",
+    ctaWhatsapp: "Report a delivery on WhatsApp",
     problemCitizen:
       "A citizen who wants to build. Ten to thirty counterparties, no reference price, no verified track record and no recourse. Kenya has a two million unit housing deficit and about 30,000 mortgage accounts.",
     problemEnterprise:
@@ -345,7 +346,7 @@ export const COPY = {
       "A state that cannot see. Over 271,000 units in development across 47 counties. Delivery reporting arrives in quarters, not days, and cannot be independently verified.",
     ctaBand:
       "A portal shows you who exists. Infrastructure lets you work, prove it and get paid.",
-    footerNote: "Demonstration build. All entities, claims and values are synthetic.",
+    footerNote: "Pilot environment. Sample data for Kenya housing.",
   },
   empty: {
     registryFiltered: {
@@ -361,7 +362,7 @@ export const COPY = {
     reviewClear: {
       title: "Queue clear.",
       description:
-        "All claims have been reviewed. Median decision time today was {time}.",
+        "All claims have been reviewed. New deliveries will appear here after edge checks.",
     },
     opportunitiesNone: {
       title: "Nothing matched your profile this week.",
@@ -380,7 +381,7 @@ export const COPY = {
     unauthorised: {
       title: "This view is for a different role.",
       description:
-        "Switch persona in the sidebar to open this page. The demonstration never dead-ends.",
+        "This area is for a different role. Switch user below to continue.",
     },
   },
   verification: {

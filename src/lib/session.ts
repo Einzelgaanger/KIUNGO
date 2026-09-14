@@ -24,7 +24,7 @@ export async function getSession(): Promise<Session> {
   if (!persona) {
     const fallback = DEMO_PERSONAS[0];
     if (!fallback) {
-      throw new Error("Demo personas are not configured.");
+      throw new Error("No user profiles are configured.");
     }
     return personaToSession(fallback);
   }
@@ -37,6 +37,7 @@ export async function setSessionCookie(userId: string): Promise<void> {
     path: "/",
     httpOnly: true,
     sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 30,
   });
 }

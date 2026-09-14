@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { expressInterest } from "@/actions/opportunities";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,27 @@ export function OpportunityBoard({ items }: { items: Item[] }) {
   const [reserved, setReserved] = useState("all");
   const [closing, setClosing] = useState("all");
   const [open, setOpen] = useState<Item | null>(null);
+  const [sent, setSent] = useState<string[]>([]);
   const now = useMemo(() => new Date("2026-09-09T12:00:00.000Z"), []);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("kiungo_interest");
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as string[];
+      if (Array.isArray(parsed)) setSent(parsed.filter((id) => typeof id === "string"));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  function markSent(id: string) {
+    setSent((current) => {
+      const next = current.includes(id) ? current : [...current, id];
+      sessionStorage.setItem("kiungo_interest", JSON.stringify(next));
+      return next;
+    });
+  }
 
   const cards = useMemo(() => {
     return items.filter((item) => {
@@ -131,12 +151,19 @@ export function OpportunityBoard({ items }: { items: Item[] }) {
               </ul>
               <Button
                 className="mt-6"
+                disabled={sent.includes(open.id)}
                 onClick={async () => {
+                  if (sent.includes(open.id)) return;
                   const result = await expressInterest({ opportunityId: open.id });
-                  if (result.ok) toast.success("Interest recorded");
+                  if (result.ok) {
+                    markSent(open.id);
+                    toast.success("Interest sent. It stays on this device for the session.");
+                  } else {
+                    toast.error(result.error);
+                  }
                 }}
               >
-                Express interest
+                {sent.includes(open.id) ? "Interest sent" : "Express interest"}
               </Button>
             </>
           ) : null}

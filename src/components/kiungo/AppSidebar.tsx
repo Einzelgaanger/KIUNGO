@@ -6,7 +6,7 @@ import { InstantLink } from "@/components/kiungo/InstantLink";
 import { Logo } from "@/components/kiungo/Logo";
 import { RoleSwitcher } from "@/components/kiungo/RoleSwitcher";
 import { isActivePath, isNavVisible, NAV_GROUPS } from "@/components/kiungo/nav";
-import { countyName } from "@/lib/constants";
+import { countyName, ROLE_LABELS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { Session } from "@/types";
 
@@ -20,7 +20,7 @@ export function AppSidebar({ session }: { session: Session }) {
           <Logo href="/registry" tone="dark" />
         </div>
         <p className="px-4 pb-2 text-[11px] font-medium text-white/50">
-          {session.role} · {countyName(session.countyCode)}
+          {ROLE_LABELS[session.role]} · {countyName(session.countyCode)}
         </p>
 
         <nav className="flex-1 space-y-4 overflow-y-auto px-2 py-2">
@@ -67,7 +67,7 @@ export function AppSidebar({ session }: { session: Session }) {
             pendingLabel="Opening WhatsApp…"
           >
             <MessageCircle className="h-[18px] w-[18px]" strokeWidth={1.5} />
-            WhatsApp demo
+            Report a delivery
           </InstantLink>
         </div>
       </div>

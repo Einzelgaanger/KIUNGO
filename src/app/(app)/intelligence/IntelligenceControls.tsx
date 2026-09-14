@@ -1,24 +1,31 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SITES, SEEDED_COUNTY_CODES, countyName } from "@/lib/constants";
+import { appendWalkParams } from "@/lib/walkthroughs";
 import { cn } from "@/lib/utils";
 
 export function IntelligenceControls({
   weeks,
   county,
   site,
+  walkSlug,
+  walkStep,
 }: {
   weeks: string;
   county: string;
   site: string;
+  walkSlug?: string;
+  walkStep?: string;
 }) {
+  const router = useRouter();
   const q = (next: { weeks?: string; county?: string; site?: string }) => {
     const params = new URLSearchParams();
     params.set("weeks", next.weeks ?? weeks);
     if ((next.county ?? county) !== "all") params.set("county", next.county ?? county);
     if ((next.site ?? site) !== "all") params.set("site", next.site ?? site);
-    return `/intelligence?${params.toString()}`;
+    return appendWalkParams(`/intelligence?${params.toString()}`, walkSlug, walkStep);
   };
   return (
     <div className="mt-4 flex flex-wrap gap-2">
@@ -36,9 +43,9 @@ export function IntelligenceControls({
       ))}
       <select
         className="min-h-11 rounded-md border border-line bg-surface px-3 text-sm"
-        defaultValue={county}
+        value={county}
         onChange={(e) => {
-          window.location.href = q({ county: e.target.value });
+          router.push(q({ county: e.target.value }));
         }}
         aria-label="County"
       >
@@ -51,9 +58,9 @@ export function IntelligenceControls({
       </select>
       <select
         className="min-h-11 rounded-md border border-line bg-surface px-3 text-sm"
-        defaultValue={site}
+        value={site}
         onChange={(e) => {
-          window.location.href = q({ site: e.target.value });
+          router.push(q({ site: e.target.value }));
         }}
         aria-label="Site"
       >
@@ -64,10 +71,16 @@ export function IntelligenceControls({
           </option>
         ))}
       </select>
-      <Link href="/intelligence/materials" className="inline-flex min-h-11 items-center text-sm underline">
+      <Link
+        href={appendWalkParams("/intelligence/materials", walkSlug, walkStep)}
+        className="inline-flex min-h-11 items-center text-sm underline"
+      >
         Materials
       </Link>
-      <Link href="/intelligence/counties" className="inline-flex min-h-11 items-center text-sm underline">
+      <Link
+        href={appendWalkParams("/intelligence/counties", walkSlug, walkStep)}
+        className="inline-flex min-h-11 items-center text-sm underline"
+      >
         Counties
       </Link>
     </div>

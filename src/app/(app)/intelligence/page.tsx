@@ -28,7 +28,7 @@ export const metadata: Metadata = { title: "Intelligence" };
 export default async function IntelligencePage({
   searchParams,
 }: {
-  searchParams: Promise<{ weeks?: string; county?: string; site?: string }>;
+  searchParams: Promise<{ weeks?: string; county?: string; site?: string; wt?: string; wts?: string }>;
 }) {
   const params = await searchParams;
   const weekCount = params.weeks === "4" ? 4 : params.weeks === "8" ? 8 : params.weeks === "all" ? 52 : 16;
@@ -172,9 +172,19 @@ export default async function IntelligencePage({
     <PageFade>
       <div className="mx-auto w-full max-w-[1400px] px-4 py-8 md:px-8">
         <SectionHeading eyebrow="Grow" title="Programme dashboard" description="Live, evidenced, by county." />
-        <IntelligenceControls weeks={params.weeks ?? "16"} county={county} site={site} />
+        <IntelligenceControls
+          weeks={params.weeks ?? "16"}
+          county={county}
+          site={site}
+          walkSlug={params.wt}
+          walkStep={params.wts}
+        />
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <StatCard tone="dark" label="Evidenced deliveries (16w)" value={claims.length} />
+          <StatCard
+            tone="dark"
+            label={weekCount === 52 ? "Evidenced deliveries (all)" : `Evidenced deliveries (${weekCount}w)`}
+            value={claims.length}
+          />
           <StatCard tone="dark" label="Value settled" value={formatKes(valueSettled)} />
           <StatCard tone="dark" label="Active suppliers" value={new Set(claims.map((c) => c.entityId)).size} />
           <StatCard tone="dark" label="Median approval time" value={`${medianHours.toFixed(1)}h`} />

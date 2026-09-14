@@ -20,7 +20,7 @@ export async function applyForFinance(
     return { ok: false, error: "Amount and consent are required." };
   }
   const session = await getSession();
-  if (!session.entityId) return { ok: false, error: "Switch to a supplier persona." };
+  if (!session.entityId) return { ok: false, error: "Switch to a supplier profile." };
   const [product, entity] = await Promise.all([
     prisma.financeProduct.findUnique({ where: { id: parsed.data.productId } }),
     prisma.entity.findUnique({ where: { id: session.entityId } }),

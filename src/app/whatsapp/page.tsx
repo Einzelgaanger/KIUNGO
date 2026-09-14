@@ -3,7 +3,7 @@ import { WhatsAppDemo } from "@/app/whatsapp/WhatsAppDemo";
 import { prisma } from "@/lib/db";
 import { withDb } from "@/lib/safe-db";
 
-export const metadata: Metadata = { title: "WhatsApp demo" };
+export const metadata: Metadata = { title: "Report a delivery" };
 
 export default async function WhatsAppPage() {
   const line = await withDb(

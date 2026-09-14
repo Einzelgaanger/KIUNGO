@@ -16,7 +16,7 @@ export default function RootError({
       </div>
       <h1 className="mt-5 font-display text-2xl font-semibold text-ink-900">Something went wrong</h1>
       <p className="mt-2 max-w-md text-sm text-ink-600">
-        Retry this page. If the database has not been seeded, run npx prisma db seed.
+        This page could not be loaded. Try again. The rest of the product is still available.
       </p>
       <Button className="mt-6 min-h-11" onClick={reset}>
         Retry

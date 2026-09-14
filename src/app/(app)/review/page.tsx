@@ -53,7 +53,7 @@ export default async function ReviewPage() {
           <EmptyState
             icon={CheckCheck}
             title={COPY.empty.reviewClear.title}
-            description={COPY.empty.reviewClear.description.replace("{time}", "3 hours 12 minutes")}
+            description={COPY.empty.reviewClear.description}
           />
         ) : (
           <div className="mt-6 overflow-hidden rounded-lg border border-line bg-surface">

@@ -4,10 +4,11 @@ import { ArrowRight } from "lucide-react";
 import { SiteNav } from "@/components/marketing/SiteNav";
 import { Reveal } from "@/components/marketing/Reveal";
 import { WALKTHROUGHS } from "@/lib/walkthroughs";
+import { StartWalkthrough } from "@/components/walkthrough/StartWalkthrough";
 
 export const metadata: Metadata = {
   title: "Live walkthroughs",
-  description: "Run Kiungo as Amina, Daniel, Grace, Peter, Faith or Samuel. Real screens. Seeded people.",
+  description: "Run Kiungo as Amina, Daniel, Grace, Peter, Faith or Samuel. Real screens. Sample people.",
 };
 
 export default function WalkthroughIndexPage() {
@@ -21,8 +22,8 @@ export default function WalkthroughIndexPage() {
             Six people. One loop. You click.
           </h1>
           <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-[#5A6B60]">
-            Government reviewers should not watch a deck. Start a walkthrough. The product switches persona,
-            opens the live page, and a dock tells you what to do and what must be true on the seeded data.
+            Government reviewers should not watch a deck. Start a walkthrough. The product switches user,
+            opens the live page, and a dock tells you what to do and what must be true on the sample data.
           </p>
           <p className="mt-6 max-w-2xl text-sm leading-relaxed text-[#0E1F1A]">
             Briefing order: Amina (the loop) → Grace (the buyer) → Daniel (the queue) → Peter (the lock) →
@@ -54,12 +55,12 @@ export default function WalkthroughIndexPage() {
                     ))}
                   </ol>
                   <div className="mk-walk__actions">
-                    <Link href={`/walkthrough/go/${item.slug}`} className="btn btn-dark">
+                    <StartWalkthrough slug={item.slug} className="btn btn-dark">
                       Start as {item.person.split(" ")[0]}
                       <span className="node">
                         <ArrowRight className="h-3.5 w-3.5" />
                       </span>
-                    </Link>
+                    </StartWalkthrough>
                     <Link href={`/walkthrough/${item.slug}`} className="btn btn-ghost-dark border-[#0E1F1A]/20 text-[#0E1F1A]">
                       Full script
                     </Link>

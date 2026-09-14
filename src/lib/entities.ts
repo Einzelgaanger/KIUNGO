@@ -54,7 +54,7 @@ export async function searchEntities(query: RegistryQuery) {
     where.claims = { some: {} };
   }
 
-  const [rows, total] = await Promise.all([
+  const [rows, total, universe] = await Promise.all([
     prisma.entity.findMany({
       where,
       include: {
@@ -73,6 +73,7 @@ export async function searchEntities(query: RegistryQuery) {
       take: limit,
     }),
     prisma.entity.count({ where }),
+    prisma.entity.count(),
   ]);
 
   const filtered = query.ownership && query.ownership.length > 0
@@ -101,6 +102,7 @@ export async function searchEntities(query: RegistryQuery) {
     page,
     limit,
     counters: {
+      universe,
       entities: query.ownership && query.ownership.length > 0 ? filtered.length : total,
       verified,
       counties: counties.length,

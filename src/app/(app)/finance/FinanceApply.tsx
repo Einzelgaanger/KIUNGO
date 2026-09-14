@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import type { FinanceProduct } from "@prisma/client";
 import { applyForFinance } from "@/actions/finance";
@@ -22,6 +23,7 @@ export function FinanceApply({ product }: { product: FinanceProduct }) {
   const [amount, setAmount] = useState(product.minAmount);
   const [consent, setConsent] = useState(false);
   const [pending, start] = useTransition();
+  const router = useRouter();
   const monthly = product.ratePctAnnual > 0 ? Math.round((amount * (product.ratePctAnnual / 100)) / 12) : 0;
 
   return (
@@ -73,6 +75,7 @@ export function FinanceApply({ product }: { product: FinanceProduct }) {
                   if (result.ok) {
                     toast.success("Application submitted");
                     setOpen(false);
+                    router.refresh();
                   } else toast.error(result.error);
                 });
               }}

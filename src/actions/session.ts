@@ -17,14 +17,14 @@ export async function switchPersona(
   if (!parsed.success) {
     return {
       ok: false,
-      error: "Choose a demo persona.",
+      error: "Choose a user profile.",
       fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
 
   const persona = DEMO_PERSONAS.find((item) => item.id === parsed.data.userId);
   if (!persona) {
-    return { ok: false, error: "That persona is not in the demonstration set." };
+    return { ok: false, error: "That profile is not available." };
   }
 
   await setSessionCookie(persona.id);

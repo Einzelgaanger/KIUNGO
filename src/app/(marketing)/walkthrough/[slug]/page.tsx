@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { SiteNav } from "@/components/marketing/SiteNav";
 import { getWalkthrough, nextWalkthrough, WALKTHROUGHS, hrefPathname } from "@/lib/walkthroughs";
+import { StartWalkthrough } from "@/components/walkthrough/StartWalkthrough";
 import { DEMO_PERSONAS, ROLE_LABELS } from "@/lib/constants";
 
 export function generateStaticParams() {
@@ -53,12 +54,12 @@ export default async function WalkthroughDetailPage({
           <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-[#5A6B60]">{item.promise}</p>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[#5A6B60]">{item.setup}</p>
           {first ? (
-            <Link href={`/walkthrough/go/${item.slug}`} className="btn btn-dark mt-8">
+            <StartWalkthrough slug={item.slug} className="btn btn-dark mt-8">
               Start on the live screens
               <span className="node">
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
-            </Link>
+            </StartWalkthrough>
           ) : null}
         </header>
 
@@ -102,16 +103,16 @@ export default async function WalkthroughDetailPage({
           <p className="font-display text-lg font-bold text-[#0E1F1A]">When you finish</p>
           <p className="mt-2 text-sm leading-relaxed text-[#5A6B60]">{item.outcome}</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href={`/walkthrough/go/${item.slug}`} className="btn btn-dark">
+            <StartWalkthrough slug={item.slug} className="btn btn-dark">
               Run it now
-            </Link>
+            </StartWalkthrough>
             <Link href="/walkthrough" className="btn btn-ghost-dark border-[#0E1F1A]/20 text-[#0E1F1A]">
               All walkthroughs
             </Link>
             {following ? (
-              <Link href={`/walkthrough/go/${following.slug}`} className="btn btn-ghost-dark border-[#0E1F1A]/20 text-[#0E1F1A]">
+              <StartWalkthrough slug={following.slug} className="btn btn-ghost-dark border-[#0E1F1A]/20 text-[#0E1F1A]">
                 Next: {following.title}
-              </Link>
+              </StartWalkthrough>
             ) : null}
           </div>
         </div>

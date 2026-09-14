@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { inviteToQuote } from "@/actions/registry";
+import { InstantLink } from "@/components/kiungo/InstantLink";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { COUNTIES, COPY, countyName } from "@/lib/constants";
@@ -138,25 +139,34 @@ export function BuildJourney({
                         {e.legalName}
                       </p>
                     ))}
-                <Button
-                  className="mt-2 min-h-11"
-                  size="sm"
-                  variant="outline"
-                  onClick={async () => {
-                    const match = entities[i * 3];
-                    if (!match) {
-                      toast.success("Interest recorded");
-                      return;
-                    }
-                    const result = await inviteToQuote({
-                      entityId: match.id,
-                      message: `Quote request from a citizen build in ${countyName(county)}`,
-                    });
-                    if (result.ok) toast.success("Invite sent");
-                  }}
-                >
-                  Invite to quote
-                </Button>
+                {stage === "Finance" ? (
+                  <Button asChild className="mt-2 min-h-11" size="sm" variant="outline">
+                    <InstantLink href="/finance">See finance products</InstantLink>
+                  </Button>
+                ) : entities[i * 3] ? (
+                  <Button
+                    className="mt-2 min-h-11"
+                    size="sm"
+                    variant="outline"
+                    onClick={async () => {
+                      const match = entities[i * 3];
+                      if (!match) {
+                        toast.error("No supplier listed for this stage yet.");
+                        return;
+                      }
+                      const result = await inviteToQuote({
+                        entityId: match.id,
+                        message: `Quote request from a citizen build in ${countyName(county)}`,
+                      });
+                      if (result.ok) toast.success("Invite sent");
+                      else toast.error(result.error);
+                    }}
+                  >
+                    Invite to quote
+                  </Button>
+                ) : (
+                  <p className="mt-2 text-xs text-ink-400">No supplier listed for this stage yet.</p>
+                )}
               </li>
             ))}
           </ol>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { WALKTHROUGHS } from "@/lib/walkthroughs";
 import { Reveal } from "@/components/marketing/Reveal";
+import { StartWalkthrough } from "@/components/walkthrough/StartWalkthrough";
 
 export function WalkthroughBand() {
   return (
@@ -13,7 +14,7 @@ export function WalkthroughBand() {
             Walk the product as the people who use it.
           </h2>
           <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-[#5A6B60]">
-            These are not slides. Each walkthrough switches you into a seeded persona and opens the real screens.
+            These are not slides. Each walkthrough switches you into a sample user and opens the real screens.
             Do the clicks. Read what the page actually shows. That is the briefing.
           </p>
           <p className="mt-3 max-w-2xl text-[13px] font-semibold text-[#0E1F1A]">
@@ -35,12 +36,12 @@ export function WalkthroughBand() {
                 <p className="mk-walk__promise">{item.promise}</p>
                 <p className="mk-walk__count">{item.steps.length} live steps</p>
                 <div className="mk-walk__actions">
-                  <Link href={`/walkthrough/go/${item.slug}`} className="btn btn-dark">
+                  <StartWalkthrough slug={item.slug} className="btn btn-dark">
                     Start
                     <span className="node">
                       <ArrowRight className="h-3.5 w-3.5" />
                     </span>
-                  </Link>
+                  </StartWalkthrough>
                   <Link href={`/walkthrough/${item.slug}`} className="btn btn-ghost-dark border-[#0E1F1A]/20 text-[#0E1F1A]">
                     Read first
                   </Link>

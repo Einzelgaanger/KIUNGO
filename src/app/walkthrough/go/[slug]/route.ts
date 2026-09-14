@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { setSessionCookie } from "@/lib/session";
+import { publicOrigin } from "@/lib/site";
 import { getWalkthrough, withWalkQuery } from "@/lib/walkthroughs";
 
 export async function GET(
@@ -8,7 +9,7 @@ export async function GET(
 ) {
   const { slug } = await params;
   const walkthrough = getWalkthrough(slug);
-  const origin = new URL(request.url).origin;
+  const origin = publicOrigin(request);
   if (!walkthrough) {
     return NextResponse.redirect(new URL("/walkthrough", origin));
   }

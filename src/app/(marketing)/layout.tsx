@@ -31,7 +31,7 @@ export default function MarketingLayout({
             <Link href="/walkthrough">Walkthroughs</Link>
             <Link href="/registry">Registry</Link>
             <PendingLink href="/whatsapp" pendingLabel="Opening…">
-              WhatsApp demo
+              WhatsApp
             </PendingLink>
           </div>
           <div>
@@ -44,7 +44,7 @@ export default function MarketingLayout({
           <div>
             <h4>Citizen</h4>
             <Link href="/build">I want to build</Link>
-            <Link href="/api/public/entities">Public API</Link>
+            <Link href="/how-it-works#api">Registry for integrators</Link>
           </div>
         </div>
         <div className="container mt-10 flex flex-col gap-3 border-t border-white/12 pt-6 text-xs text-white/55 sm:flex-row sm:justify-between">

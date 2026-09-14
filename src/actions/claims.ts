@@ -62,7 +62,7 @@ export async function submitClaim(
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session.userId } });
   if (!user?.entityId) {
-    return { ok: false, error: "This persona cannot submit a delivery." };
+    return { ok: false, error: "This profile cannot submit a delivery." };
   }
 
   const line = await prisma.contractLine.findUnique({

@@ -1,27 +1,52 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+
+export type ShortlistItem = { id: string; slug: string; name: string };
 
 type ShortlistContextValue = {
-  ids: string[];
-  toggle: (id: string) => void;
+  items: ShortlistItem[];
+  toggle: (item: ShortlistItem) => void;
   has: (id: string) => boolean;
 };
 
+const STORAGE_KEY = "kiungo_shortlist";
 const ShortlistContext = createContext<ShortlistContextValue | null>(null);
 
 export function ShortlistProvider({ children }: { children: ReactNode }) {
-  const [ids, setIds] = useState<string[]>([]);
+  const [items, setItems] = useState<ShortlistItem[]>([]);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as ShortlistItem[];
+        if (Array.isArray(parsed)) setItems(parsed.filter((row) => row?.id && row?.slug));
+      }
+    } catch {
+      /* ignore */
+    }
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items, ready]);
+
   const value = useMemo<ShortlistContextValue>(
     () => ({
-      ids,
-      toggle: (id) =>
-        setIds((current) =>
-          current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+      items,
+      toggle: (item) =>
+        setItems((current) =>
+          current.some((row) => row.id === item.id)
+            ? current.filter((row) => row.id !== item.id)
+            : [...current, item],
         ),
-      has: (id) => ids.includes(id),
+      has: (id) => items.some((row) => row.id === id),
     }),
-    [ids],
+    [items],
   );
   return <ShortlistContext.Provider value={value}>{children}</ShortlistContext.Provider>;
 }

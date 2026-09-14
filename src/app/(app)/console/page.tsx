@@ -23,7 +23,7 @@ export default async function ConsolePage() {
     return (
       <div className="mx-auto max-w-[1400px] px-4 py-8">
         <SectionHeading title={`Good morning, ${session.name.split(" ")[0]}`} />
-        <p className="mt-4 text-sm text-ink-600">This persona has no supplier entity.</p>
+        <p className="mt-4 text-sm text-ink-600">This profile is not linked to a supplier file. Switch user to a supplier to open the console.</p>
       </div>
     );
   }
@@ -118,7 +118,7 @@ export default async function ConsolePage() {
             label="Value settled this month"
             value={formatKesCompact(monthValue._sum.supplierShare ?? 0)}
           />
-          <StatCard label="Median approval time" value="3h" hint="Across your last 20 claims" />
+          <StatCard label="Typical approval" value="Same day" hint="On this file in the pilot" />
           <StatCard label="Reliability score" value={entity?.reliability ?? "—"} />
         </div>
 

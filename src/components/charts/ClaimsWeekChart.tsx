@@ -32,7 +32,7 @@ export function ClaimsWeekChart({
         </ResponsiveContainer>
       </div>
       <figcaption className="mt-2 text-xs text-ink-400">
-        Weekly claims over the last 16 weeks, coloured by status.
+        Weekly claims over the last {data.length} weeks, coloured by status.
       </figcaption>
     </figure>
   );
