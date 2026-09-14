@@ -672,3 +672,114 @@
 .scroll-margin-nav {
   scroll-margin-top: 96px;
 }
+
+.kiungo-site .mk-walk {
+  background: #f3faf5;
+  padding: 72px 0 88px;
+}
+
+.kiungo-site .mk-walk--page {
+  background: #fff;
+  padding-top: 56px;
+}
+
+.kiungo-site .mk-walk__grid {
+  display: grid;
+  gap: 18px;
+  margin-top: 40px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .kiungo-site .mk-walk__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1100px) {
+  .kiungo-site .mk-walk__grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.kiungo-site .mk-walk__card {
+  height: 100%;
+  padding: 22px 22px 20px;
+  border: 1px solid #e3e7e0;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 32px rgba(14, 31, 26, 0.05);
+}
+
+.kiungo-site .mk-walk__meta {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5a6b60;
+}
+
+.kiungo-site .mk-walk__card h3 {
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #0e1f1a;
+}
+
+.kiungo-site .mk-walk__who {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0e1f1a;
+}
+
+.kiungo-site .mk-walk__who span {
+  font-weight: 400;
+  color: #5a6b60;
+}
+
+.kiungo-site .mk-walk__promise {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #5a6b60;
+}
+
+.kiungo-site .mk-walk__count {
+  margin-top: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0e1f1a;
+}
+
+.kiungo-site .mk-walk__steps {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.kiungo-site .mk-walk__steps li {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 13px;
+  color: #5a6b60;
+}
+
+.kiungo-site .mk-walk__steps span {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #0e1f1a;
+}
+
+.kiungo-site .mk-walk__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}

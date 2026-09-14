@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "/how-it-works", label: "How it works" },
+  { href: "/walkthrough", label: "Walkthroughs" },
   { href: "/whatsapp", label: "WhatsApp demo" },
   { href: "/registry", label: "Live registry" },
 ];
@@ -69,7 +70,10 @@ export function SiteNav({ overlay = false }: { overlay?: boolean }) {
             <InstantLink
               key={link.href}
               href={link.href}
-              className={cn("nav-link", pathname === link.href && "is-active")}
+              className={cn(
+                "nav-link",
+                (pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`))) && "is-active",
+              )}
             >
               {link.label}
             </InstantLink>
@@ -105,6 +109,11 @@ export function SiteNav({ overlay = false }: { overlay?: boolean }) {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
+              className={cn(
+                pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`))
+                  ? "is-active"
+                  : undefined,
+              )}
             >
               {link.label}
             </InstantLink>

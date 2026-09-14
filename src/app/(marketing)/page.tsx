@@ -5,6 +5,7 @@ import { SiteNav } from "@/components/marketing/SiteNav";
 import { Reveal } from "@/components/marketing/Reveal";
 import { BRAND, PHOTOS } from "@/lib/brand";
 import { COPY } from "@/lib/constants";
+import { WalkthroughBand } from "@/components/walkthrough/WalkthroughBand";
 import { prisma } from "@/lib/db";
 
 const LOOP = [
@@ -155,6 +156,8 @@ export default async function LandingPage() {
           </div>
         </section>
       ))}
+
+      <WalkthroughBand />
 
       <div className="mk-slash" />
 

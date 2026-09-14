@@ -154,10 +154,14 @@ export default async function FinancePage() {
                 <p className="font-medium">{product.productName}</p>
                 <p className="text-sm text-ink-600">{product.providerName}</p>
                 <p className="mt-2 text-sm">
-                  Requires reliability {product.minReliability}. You are at {entity?.reliability ?? 0}.
-                  {product.minReliability > (entity?.reliability ?? 0)
-                    ? " Six more on-time deliveries would typically close that gap."
-                    : ""}
+                  {product.requiresVerified && entity?.verification !== "VERIFIED"
+                    ? "Requires a VERIFIED identity. This file is still pending."
+                    : `Requires reliability ${product.minReliability}. You are at ${entity?.reliability ?? 0}.`}
+                  {product.requiresVerified && entity?.verification !== "VERIFIED"
+                    ? ""
+                    : product.minReliability > (entity?.reliability ?? 0)
+                      ? " Six more on-time deliveries would typically close that gap."
+                      : ""}
                 </p>
               </div>
             ))}

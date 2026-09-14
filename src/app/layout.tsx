@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Inter, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { WalkthroughDock } from "@/components/walkthrough/WalkthroughDock";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -88,6 +90,9 @@ export default function RootLayout({
         className={`${jakarta.variable} ${space.variable} ${inter.variable} ${plex.variable} font-sans antialiased`}
       >
         {children}
+        <Suspense fallback={null}>
+          <WalkthroughDock />
+        </Suspense>
         <Toaster />
       </body>
     </html>

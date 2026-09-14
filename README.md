@@ -28,6 +28,12 @@ That reapplies the migration and runs the deterministic seed (`SEED = 20260909`)
 
 ## Demo path (nine minutes)
 
+Prefer **Live walkthroughs** at `/walkthrough` — they switch persona and open the real screens with a dock that names the click and what must be true.
+
+Start with **Amina reports a delivery** (nine minutes). Then Grace, Daniel, Peter, Faith, Samuel.
+
+Manual path if you brief from memory:
+
 1. `/` — pitch and the six-step loop.
 2. `/registry` — Nairobi, fabricators, youth-owned.
 3. `/registry/kariobangi-metal-works` — certification and reliability.

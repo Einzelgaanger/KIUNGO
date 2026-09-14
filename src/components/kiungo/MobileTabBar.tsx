@@ -118,6 +118,13 @@ export function MobileTabBar({ session }: { session: Session }) {
               );
             })}
             <InstantLink
+              href="/walkthrough"
+              onClick={() => setMoreOpen(false)}
+              className="sidebar-nav-link"
+            >
+              Live walkthroughs
+            </InstantLink>
+            <InstantLink
               href="/whatsapp"
               onClick={() => setMoreOpen(false)}
               className="sidebar-nav-link"

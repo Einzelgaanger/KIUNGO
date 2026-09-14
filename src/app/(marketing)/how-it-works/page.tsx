@@ -72,12 +72,17 @@ export default function HowItWorksPage() {
             </li>
           </ul>
           <p className="mt-6 text-[11px] text-[#5A6B7D]">Cache-Control: public, s-maxage=300. CORS is open on these routes.</p>
-          <Link href="/registry" className="btn btn-dark mt-8">
-            Open the registry
-            <span className="node">
-              <ArrowRight className="h-3.5 w-3.5" />
-            </span>
-          </Link>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/walkthrough" className="btn btn-dark">
+              Live walkthroughs
+              <span className="node">
+                <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+            <Link href="/registry" className="btn btn-ghost-dark border-[#0E1F1A]/20 text-[#0E1F1A]">
+              Open the registry
+            </Link>
+          </div>
         </div>
       </section>
     </>

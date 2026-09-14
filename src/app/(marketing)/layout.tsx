@@ -12,7 +12,7 @@ export default function MarketingLayout({
 }) {
   return (
     <div className="kiungo-site min-h-dvh">
-      <PrefetchRoutes hrefs={["/whatsapp", "/registry", "/how-it-works"]} />
+      <PrefetchRoutes hrefs={["/whatsapp", "/registry", "/how-it-works", "/walkthrough"]} />
       {children}
       <footer className="site-footer">
         <div className="container site-footer__grid">
@@ -28,6 +28,7 @@ export default function MarketingLayout({
           <div>
             <h4>Product</h4>
             <Link href="/how-it-works">How it works</Link>
+            <Link href="/walkthrough">Walkthroughs</Link>
             <Link href="/registry">Registry</Link>
             <PendingLink href="/whatsapp" pendingLabel="Opening…">
               WhatsApp demo

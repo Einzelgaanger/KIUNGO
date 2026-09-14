@@ -178,7 +178,7 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     entityName: "Kondele Fabricators Self-Help Group",
     countyCode: "042",
     phone: "+254712000002",
-    why: "The contrast. PENDING verification, reliability null, blocked from a finance product.",
+    why: "The contrast. PENDING verification. May have seeded claims and a score; supplier finance stays closed.",
   },
   {
     id: "user-grace",
